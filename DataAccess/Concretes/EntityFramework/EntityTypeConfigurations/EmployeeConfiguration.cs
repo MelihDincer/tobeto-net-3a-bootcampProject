@@ -8,10 +8,7 @@ namespace DataAccess.Concretes.EntityFramework.EntityTypeConfigurations
     {
         public void Configure(EntityTypeBuilder<Employee> builder)
         {
-            builder.Property(x => x.UserId).HasColumnName("UserId").IsRequired();
             builder.Property(x => x.Position).HasColumnName("Position").IsRequired();
-
-            builder.HasOne(x => x.User);
         }
     }
 }

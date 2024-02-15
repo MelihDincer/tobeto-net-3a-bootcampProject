@@ -1,13 +1,9 @@
 ﻿namespace Entities.Concretes
 {
-    //Çalışan
     public class Employee : User
     {
         public int UserId { get; set; }
         public string Position { get; set; }
-
-        public virtual User? User { get; set; }
-
 
         public Employee()
         {           

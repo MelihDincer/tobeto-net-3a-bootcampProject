@@ -17,10 +17,6 @@ namespace DataAccess.Concretes.EntityFramework.EntityTypeConfigurations
             builder.Property(x => x.NationalIdentity).HasColumnName("NationalIdentity").IsRequired();
             builder.Property(x => x.Email).HasColumnName("Email").IsRequired();
             builder.Property(x => x.Password).HasColumnName("Password").IsRequired();
-
-            builder.HasMany(x => x.Applicants);
-            builder.HasMany(x => x.Instructors);
-            builder.HasMany(x => x.Employees);
         }
     }
 }

@@ -5,9 +5,6 @@
     {
         public int UserId { get; set; }
         public string About { get; set; }
-
-        public virtual User? User { get; set; }
-
         public Applicant()
         {
         }

@@ -1,15 +1,10 @@
 ﻿using Core.Entities;
-
 namespace Entities.Concretes
 {
-    //Eğitmen
     public class Instructor : User
     {
         public int UserId { get; set; }
         public string CompanyName { get; set; }
-
-        public virtual User? User { get; set; }
-
         public Instructor()
         {
         }
