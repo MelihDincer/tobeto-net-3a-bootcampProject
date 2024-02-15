@@ -8,10 +8,8 @@ namespace DataAccess.Concretes.EntityFramework.EntityTypeConfigurations
     {
         public void Configure(EntityTypeBuilder<Instructor> builder)
         {
-            builder.ToTable("Instructors").HasKey(x => x.Id);
-            builder.Property(x => x.Id).HasColumnName("Id");
-            builder.Property(x => x.UserId).HasColumnName("UserId");
-            builder.Property(x => x.CompanyName).HasColumnName("CompanyName");
+            builder.Property(x => x.UserId).HasColumnName("UserId").IsRequired();
+            builder.Property(x => x.CompanyName).HasColumnName("CompanyName").IsRequired();
 
             builder.HasOne(x => x.User);
         }
