@@ -3,17 +3,15 @@
     //Başvuran
     public class Applicant : User
     {
-        public int UserId { get; set; }
         public string About { get; set; }
         public Applicant()
         {
         }
 
-        public Applicant(int id, int userId, string about, string userName, string firstName, string lastName,
+        public Applicant(int id, string about, string userName, string firstName, string lastName,
             DateTime dateOfBirth, string nationalIdentity, string eMail, string password)
         {
             Id = id;
-            UserId = userId;
             About = about;
             UserName = userName;
             FirstName = firstName;
