@@ -8,18 +8,10 @@
         {
         }
 
-        public Applicant(int id, string about, string userName, string firstName, string lastName,
-            DateTime dateOfBirth, string nationalIdentity, string eMail, string password)
+        public Applicant(int userId, string about)
         {
-            Id = id;
+            Id = userId;
             About = about;
-            UserName = userName;
-            FirstName = firstName;
-            LastName = lastName;
-            DateOfBirth = dateOfBirth;
-            NationalIdentity = nationalIdentity;
-            Email = eMail;
-            Password = password;
         }
     }
 }

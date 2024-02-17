@@ -31,14 +31,14 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("CreatedDate")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2")
                         .HasColumnName("DateOfBirth");
 
-                    b.Property<DateTime?>("DeletedDate")
+                    b.Property<DateTime>("DeletedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -66,7 +66,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Password");
 
-                    b.Property<DateTime?>("UpdatedDate")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserName")
