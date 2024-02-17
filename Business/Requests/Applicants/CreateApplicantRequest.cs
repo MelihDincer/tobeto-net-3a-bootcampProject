@@ -1,8 +1,6 @@
-﻿using Business.Responses.Users;
-
-namespace Business.Requests.Applicants
+﻿namespace Business.Requests.Applicants
 {
-    public class CreateApplicantRequest : GetByIdUserResponse
+    public class CreateApplicantRequest
     {
         public int UserId { get; set; }
         public string About { get; set; }
