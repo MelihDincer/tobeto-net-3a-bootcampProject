@@ -1,4 +1,6 @@
-﻿namespace Business.Requests.Applicants
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Business.Requests.Applicants
 {
     public class CreateApplicantRequest
     {
