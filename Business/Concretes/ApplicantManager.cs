@@ -44,8 +44,8 @@ namespace Business.Concretes
             await _applicantRepository.Add(applicant);
 
             CreateApplicantResponse response = new();
-            response.UserId = request.UserId;
-            response.About = request.About;
+            response.UserId = applicant.Id;
+            response.About = applicant.About;
             return response;
         }
 
@@ -70,8 +70,8 @@ namespace Business.Concretes
             await _applicantRepository.Update(applicant);
 
             UpdateApplicantResponse response = new();
-            response.UserId = request.UserId;
-            response.About = request.About;
+            response.UserId = applicant.Id;
+            response.About = applicant.About;
             return response;
         }
     }

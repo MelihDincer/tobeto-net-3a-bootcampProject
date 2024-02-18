@@ -39,12 +39,12 @@ namespace Business.Concretes
         {
             Instructor instructor = new();
             instructor.Id = request.UserId;
-            instructor.CompanyName = instructor.CompanyName;
+            instructor.CompanyName = request.CompanyName;
             await _instructorRepository.Add(instructor);
 
             CreateInstructorResponse response = new();
-            response.UserId = request.UserId;
-            response.CompanyName = request.CompanyName;
+            response.UserId = instructor.Id;
+            response.CompanyName = instructor.CompanyName;
             return response;
         }
 
@@ -56,8 +56,8 @@ namespace Business.Concretes
             await _instructorRepository.Delete(instructor);
 
             DeleteInstructorResponse response = new();
-            response.UserId = request.UserId;
-            response.CompanyName = request.CompanyName;
+            response.UserId = instructor.Id;
+            response.CompanyName = instructor.CompanyName;
             return response;
         }
 
@@ -69,8 +69,8 @@ namespace Business.Concretes
             await _instructorRepository.Update(instructor);
 
             UpdateInstructorResponse response = new();
-            response.UserId = request.UserId;
-            response.CompanyName = request.CompanyName;
+            response.UserId = instructor.Id;
+            response.CompanyName = instructor.CompanyName;
             return response;
         }
     }
