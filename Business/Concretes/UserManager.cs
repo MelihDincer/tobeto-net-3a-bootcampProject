@@ -21,6 +21,7 @@ namespace Business.Concretes
             foreach (var user in await _userRepository.GetAll())
             {
                 GetAllUserResponse response = new();
+                response.Id = user.Id;
                 response.UserName = user.UserName;
                 response.FirstName = user.FirstName;
                 response.LastName = user.LastName;
@@ -40,6 +41,7 @@ namespace Business.Concretes
         {
             GetByIdUserResponse response = new();
             User user = await _userRepository.Get(x => x.Id == id);
+            response.Id = user.Id;
             response.UserName = user.UserName;
             response.FirstName = user.FirstName;
             response.LastName = user.LastName;
