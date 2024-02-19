@@ -10,5 +10,11 @@ namespace Business.Abstracts
         Task<CreateInstructorResponse> AddAsync(CreateInstructorRequest request);
         Task<DeleteInstructorResponse> DeleteAsync(DeleteInstructorRequest request);
         Task<UpdateInstructorResponse> UpdateAsync(UpdateInstructorRequest request);
+
+        //List<GetAllInstructorResponse> GetAll();
+        //GetByIdInstructorResponse GetById(int id);
+        //CreateInstructorResponse Add(CreateInstructorRequest request);
+        //DeleteInstructorResponse Delete(DeleteInstructorRequest request);
+        //UpdateInstructorResponse Update(UpdateInstructorRequest request);
     }
 }

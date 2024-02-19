@@ -1,6 +1,4 @@
 ﻿using Business.Abstracts;
-using Business.Requests.Users;
-using Business.Responses.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -27,24 +25,5 @@ namespace WebAPI.Controllers
         {
             return Ok(await _userService.GetById(id));
         }
-
-        [HttpPost]
-        public async Task<CreateUserResponse> AddAsync(CreateUserRequest request)
-        {
-            return await _userService.AddAsync(request);
-        }
-
-        [HttpDelete]
-        public async Task<DeleteUserResponse> DeleteAsync(DeleteUserRequest request)
-        {
-            return await _userService.DeleteAsync(request);
-        }
-
-        [HttpPut]
-        public async Task<UpdateUserResponse> UpdateAsync(UpdateUserRequest request)
-        {
-            return await _userService.UpdateAsync(request);
-        }
-
     }
 }

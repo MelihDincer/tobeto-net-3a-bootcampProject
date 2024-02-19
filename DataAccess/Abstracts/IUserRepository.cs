@@ -3,7 +3,7 @@ using Entities.Concretes;
 
 namespace DataAccess.Abstracts
 {
-    public interface IUserRepository : IAsyncRepository<User, int>
+    public interface IUserRepository : IAsyncRepository<User, int>, IRepository<User, int>
     {
     }
 }

@@ -20,11 +20,6 @@ namespace DataAccess.Concretes.EntityFramework.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().ToTable("Users");
-            modelBuilder.Entity<Applicant>().ToTable("Applicants");
-            modelBuilder.Entity<Employee>().ToTable("Employees");
-            modelBuilder.Entity<Instructor>().ToTable("Instructors");
-
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {

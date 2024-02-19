@@ -10,5 +10,11 @@ namespace Business.Abstracts
         Task<CreateApplicantResponse> AddAsync(CreateApplicantRequest request);
         Task<DeleteApplicantResponse> DeleteAsync(DeleteApplicantRequest request);
         Task<UpdateApplicantResponse> UpdateAsync(UpdateApplicantRequest request);
+
+        //List<GetAllApplicantResponse> GetAll();
+        //GetByIdApplicantResponse GetById(int id);
+        //CreateApplicantResponse Add(CreateApplicantRequest request);
+        //DeleteApplicantResponse Delete(DeleteApplicantRequest request);
+        //UpdateApplicantResponse Update(UpdateApplicantRequest request);
     }
 }
