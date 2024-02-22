@@ -5,7 +5,7 @@
         public bool Success { get; }
         public string Message { get; }
 
-        public Result(string message, bool success) : this(success)
+        public Result(bool success, string message) : this(success)
         {
             Message = message;
         }

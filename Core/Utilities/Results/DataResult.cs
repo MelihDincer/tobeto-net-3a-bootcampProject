@@ -4,7 +4,7 @@
     {
         public T Data { get; }
 
-        public DataResult(T data, string message, bool success) : base(message, success)
+        public DataResult(T data, bool success, string message) : base(success, message)
         {
             Data = data;
         }
