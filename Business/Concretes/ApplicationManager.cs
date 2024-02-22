@@ -54,7 +54,6 @@ namespace Business.Concretes
         {
             Application application = _mapper.Map<Application>(request);
             await _applicationRepository.UpdateAsync(application);
-
             UpdateApplicationResponse response = _mapper.Map<UpdateApplicationResponse>(application);
             return new SuccessDataResult<UpdateApplicationResponse>(response,"Güncelleme başarılı");
         }

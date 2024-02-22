@@ -1,6 +1,6 @@
 ﻿namespace Business.Requests.BootcampStates
 {
-    public class UpdateBootcampStateResponse
+    public class UpdateBootcampStateRequest
     {
         public int Id { get; set; }
         public string Name { get; set; }

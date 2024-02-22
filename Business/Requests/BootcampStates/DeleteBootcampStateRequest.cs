@@ -1,6 +1,6 @@
 ﻿namespace Business.Requests.BootcampStates
 {
-    public class DeleteBootcampStateResponse
+    public class DeleteBootcampStateRequest
     {
         public int Id { get; set; }
     }
