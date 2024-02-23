@@ -1,6 +1,8 @@
-﻿using Business.Abstracts;
+﻿using AutoMapper;
+using Business.Abstracts;
 using Business.Requests.Employees;
 using Business.Responses.Employees;
+using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
 
@@ -9,129 +11,49 @@ namespace Business.Concretes
     public class EmployeeManager : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IMapper _mapper;
 
-        public EmployeeManager(IEmployeeRepository employeeRepository)
+        public EmployeeManager(IEmployeeRepository employeeRepository, IMapper mapper)
         {
             _employeeRepository = employeeRepository;
+            _mapper = mapper;
         }
 
-        public async Task<List<GetAllEmployeeResponse>> GetAll()
+        public async Task<IDataResult<List<GetAllEmployeeResponse>>> GetAllAsync()
         {
-            List<GetAllEmployeeResponse> employees = new List<GetAllEmployeeResponse>();
-            foreach (var employee in await _employeeRepository.GetAllAsync())
-            {
-                GetAllEmployeeResponse response = new();
-                response.UserId = employee.Id;
-                response.UserName = employee.UserName;
-                response.FirstName = employee.FirstName;
-                response.LastName = employee.LastName;
-                response.Email = employee.Email;
-                response.DateOfBirth = employee.DateOfBirth;
-                response.NationalIdentity = employee.NationalIdentity;
-                response.Password = employee.Password;
-                response.Position = employee.Position;
-                response.CreatedDate = employee.CreatedDate;
-                response.DeletedDate = employee.DeletedDate;
-                response.UpdatedDate = employee.UpdatedDate;
-                employees.Add(response);
-            }
-            return employees;
+            List<Employee> employees = await _employeeRepository.GetAllAsync();
+            List<GetAllEmployeeResponse> responses = _mapper.Map<List<GetAllEmployeeResponse>>(employees);
+            return new SuccessDataResult<List<GetAllEmployeeResponse>>(responses, "Başarıyla listelendi");
         }
 
-        public async Task<GetByIdEmployeeResponse> GetById(int id)
+        public async Task<IDataResult<GetByIdEmployeeResponse>> GetByIdAsync(int id)
         {
-            GetByIdEmployeeResponse response = new();
             Employee employee = await _employeeRepository.GetAsync(x => x.Id == id);
-            response.UserId = employee.Id;
-            response.UserName = employee.UserName;
-            response.FirstName = employee.FirstName;
-            response.LastName = employee.LastName;
-            response.Email = employee.Email;
-            response.DateOfBirth = employee.DateOfBirth;
-            response.NationalIdentity = employee.NationalIdentity;
-            response.Password = employee.Password;
-            response.Position = employee.Position;
-            response.CreatedDate = employee.CreatedDate;
-            response.DeletedDate = employee.DeletedDate;
-            response.UpdatedDate = employee.UpdatedDate;
-            return response;
+            GetByIdEmployeeResponse response = _mapper.Map<GetByIdEmployeeResponse>(employee);
+            return new SuccessDataResult<GetByIdEmployeeResponse>(response);
         }
 
-        public async Task<CreateEmployeeResponse> AddAsync(CreateEmployeeRequest request)
+        public async Task<IDataResult<CreateEmployeeResponse>> AddAsync(CreateEmployeeRequest request)
         {
-            Employee employee = new();
-            employee.UserName = request.UserName;
-            employee.FirstName = request.FirstName;
-            employee.LastName = request.LastName;
-            employee.Email = request.Email;
-            employee.DateOfBirth = request.DateOfBirth;
-            employee.Password = request.Password;
-            employee.NationalIdentity = request.NationalIdentity;
-            employee.Position = request.Position;
+            Employee employee = _mapper.Map<Employee>(request);
             await _employeeRepository.AddAsync(employee);
-
-            CreateEmployeeResponse response = new();
-            response.UserId = employee.Id;
-            response.UserName = employee.UserName;
-            response.FirstName = employee.FirstName;
-            response.LastName = employee.LastName;
-            response.Email = employee.Email;
-            response.DateOfBirth = employee.DateOfBirth;
-            response.NationalIdentity = employee.NationalIdentity;
-            response.Password = employee.Password;
-            response.Position = employee.Position;
-            response.CreatedDate = employee.CreatedDate;
-            return response;
+            CreateEmployeeResponse response = _mapper.Map<CreateEmployeeResponse>(employee);
+            return new SuccessDataResult<CreateEmployeeResponse>(response, "Başarıyla eklendi");
         }
 
-        public async Task<DeleteEmployeeResponse> DeleteAsync(DeleteEmployeeRequest request)
+        public async Task<IResult> DeleteAsync(DeleteEmployeeRequest request)
         {
-            Employee employee = await _employeeRepository.GetAsync(x => x.Id == request.UserId);
-            employee.Id = request.UserId;
+            Employee employee = _mapper.Map<Employee>(request);
             await _employeeRepository.DeleteAsync(employee);
-
-            DeleteEmployeeResponse response = new();
-            response.UserId = employee.Id;
-            response.UserName = employee.UserName;
-            response.FirstName = employee.FirstName;
-            response.LastName = employee.LastName;
-            response.Email = employee.Email;
-            response.DateOfBirth = employee.DateOfBirth;
-            response.NationalIdentity = employee.NationalIdentity;
-            response.Password = employee.Password;
-            response.Position = employee.Position;
-            response.CreatedDate = employee.CreatedDate;
-            response.DeletedDate = employee.DeletedDate;
-            response.UpdatedDate = employee.UpdatedDate;
-            return response;
+            return new SuccessResult("Başarıyla silindi");
         }
 
-        public async Task<UpdateEmployeeResponse> UpdateAsync(UpdateEmployeeRequest request)
+        public async Task<IDataResult<UpdateEmployeeResponse>> UpdateAsync(UpdateEmployeeRequest request)
         {
-            Employee employee = await _employeeRepository.GetAsync(x => x.Id == request.UserId);
-            employee.UserName = request.UserName;
-            employee.FirstName = request.FirstName;
-            employee.LastName = request.LastName;
-            employee.Email = request.Email;
-            employee.DateOfBirth = request.DateOfBirth;
-            employee.NationalIdentity = request.NationalIdentity;
-            employee.Password = request.Password;
-            employee.Position = request.Position;
+            Employee employee = _mapper.Map<Employee>(request);
             await _employeeRepository.UpdateAsync(employee);
-
-            UpdateEmployeeResponse response = new();
-            response.UserId = employee.Id;
-            response.UserName = employee.UserName;
-            response.FirstName = employee.FirstName;
-            response.LastName = employee.LastName;
-            response.Email = employee.Email;
-            response.DateOfBirth = employee.DateOfBirth;
-            response.NationalIdentity = employee.NationalIdentity;
-            response.Password = employee.Password;
-            response.Position = employee.Position;
-            response.CreatedDate = employee.CreatedDate;
-            response.UpdatedDate = employee.UpdatedDate;
-            return response;
+            UpdateEmployeeResponse response = _mapper.Map<UpdateEmployeeResponse>(employee);
+            return new SuccessDataResult<UpdateEmployeeResponse>(response, "Başarıyla güncellendi");
         }
     }
 }

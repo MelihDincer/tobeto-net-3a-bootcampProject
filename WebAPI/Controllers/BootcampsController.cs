@@ -24,7 +24,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IDataResult<GetByIdBootcampResponse>> GetById(int id)
+        public async Task<IDataResult<GetByIdBootcampResponse>> GetByIdAsync(int id)
         {
             return await _bootcampService.GetByIdAsync(id);
         }

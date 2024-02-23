@@ -23,7 +23,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IDataResult<GetByIdApplicationResponse>> GetById(int id)
+        public async Task<IDataResult<GetByIdApplicationResponse>> GetByIdAsync(int id)
         {
             return await _applicationService.GetByIdAsync(id);
         }

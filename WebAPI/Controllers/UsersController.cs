@@ -1,4 +1,6 @@
 ﻿using Business.Abstracts;
+using Business.Responses.Users;
+using Core.Utilities.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -15,15 +17,15 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IDataResult<List<GetAllUserResponse>>> GetAllAsync()
         {
-            return Ok(await _userService.GetAll());
+            return await _userService.GetAllAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IDataResult<GetByIdUserResponse>> GetByIdAsync(int id)
         {
-            return Ok(await _userService.GetById(id));
+            return await _userService.GetByIdAsync(id);
         }
     }
 }
