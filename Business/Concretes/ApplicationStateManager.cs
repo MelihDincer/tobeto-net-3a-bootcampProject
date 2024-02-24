@@ -5,6 +5,7 @@ using Business.Responses.ApplicationStates;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Business.Concretes
 {
@@ -27,11 +28,12 @@ namespace Business.Concretes
             return new SuccessDataResult<CreateApplicationStateResponse>(response, "Ekleme işlemi başarılı");
         }
 
-        public async Task<IResult> DeleteAsync(DeleteApplicationStateRequest request)
+        public async Task<IDataResult<DeleteApplicationStateResponse>> DeleteAsync(DeleteApplicationStateRequest request)
         {
             ApplicationState applicationState = _mapper.Map<ApplicationState>(request);
             await _applicationStateRepository.DeleteAsync(applicationState);
-            return new SuccessResult("Silme işlemi başarılı");
+            DeleteApplicationStateResponse response = _mapper.Map<DeleteApplicationStateResponse>(applicationState);
+            return new SuccessDataResult<DeleteApplicationStateResponse>(response, "Silme işlemi başarılı");
         }
 
         public async Task<IDataResult<List<GetAllApplicationStateResponse>>> GetAllAsync()
@@ -50,7 +52,8 @@ namespace Business.Concretes
 
         public async Task<IDataResult<UpdateApplicationStateResponse>> UpdateAsync(UpdateApplicationStateRequest request)
         {
-            ApplicationState applicationState = _mapper.Map<ApplicationState>(request);
+            ApplicationState applicationState = await _applicationStateRepository.GetAsync(x=>x.Id == request.Id);
+            _mapper.Map(request, applicationState);
             await _applicationStateRepository.UpdateAsync(applicationState);
             UpdateApplicationStateResponse response = _mapper.Map<UpdateApplicationStateResponse>(applicationState);
             return new SuccessDataResult<UpdateApplicationStateResponse>(response, "Güncelleme işlemi başarılı");

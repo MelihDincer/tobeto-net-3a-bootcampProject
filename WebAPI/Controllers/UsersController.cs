@@ -7,7 +7,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseController
     {
         private readonly IUserService _userService;
 
@@ -17,15 +17,15 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IDataResult<List<GetAllUserResponse>>> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
-            return await _userService.GetAllAsync();
+            return HandleDataResult(await _userService.GetAllAsync());
         }
 
         [HttpGet("{id}")]
-        public async Task<IDataResult<GetByIdUserResponse>> GetByIdAsync(int id)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
-            return await _userService.GetByIdAsync(id);
+            return HandleDataResult(await _userService.GetByIdAsync(id));
         }
     }
 }

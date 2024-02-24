@@ -9,7 +9,7 @@ namespace Business.Abstracts
         Task<IDataResult<List<GetAllApplicantResponse>>> GetAllAsync();
         Task<IDataResult<GetByIdApplicantResponse>> GetByIdAsync(int id);
         Task<IDataResult<CreateApplicantResponse>> AddAsync(CreateApplicantRequest request);
-        Task<IResult> DeleteAsync(DeleteApplicantRequest request);
+        Task<IDataResult<DeleteApplicantResponse>> DeleteAsync(DeleteApplicantRequest request);
         Task<IDataResult<UpdateApplicantResponse>> UpdateAsync(UpdateApplicantRequest request);
 
         //List<GetAllApplicantResponse> GetAll();

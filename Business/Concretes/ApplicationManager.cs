@@ -29,11 +29,12 @@ namespace Business.Concretes
             return new SuccessDataResult<CreateApplicationResponse>(response, "Başvuru ekleme başarılı.");
         }
 
-        public async Task<IResult> DeleteAsync(DeleteApplicationRequest request)
+        public async Task<IDataResult<DeleteApplicationResponse>> DeleteAsync(DeleteApplicationRequest request)
         {
             Application application = _applicationRepository.Get(x => x.Id == request.Id);
             await _applicationRepository.DeleteAsync(application);
-            return new SuccessResult("Başvuru silme başarılı.");
+            DeleteApplicationResponse response = _mapper.Map<DeleteApplicationResponse>(application);
+            return new SuccessDataResult<DeleteApplicationResponse>(response, "Başvuru silme başarılı.");
         }
 
         public async Task<IDataResult<List<GetAllApplicationResponse>>> GetAllAsync()
@@ -52,10 +53,11 @@ namespace Business.Concretes
 
         public async Task<IDataResult<UpdateApplicationResponse>> UpdateAsync(UpdateApplicationRequest request)
         {
-            Application application = _mapper.Map<Application>(request);
+            Application application = await _applicationRepository.GetAsync(x => x.Id == request.Id);
+            _mapper.Map(request, application);
             await _applicationRepository.UpdateAsync(application);
             UpdateApplicationResponse response = _mapper.Map<UpdateApplicationResponse>(application);
-            return new SuccessDataResult<UpdateApplicationResponse>(response,"Güncelleme başarılı");
+            return new SuccessDataResult<UpdateApplicationResponse>(response, "Güncelleme başarılı");
         }
     }
 }

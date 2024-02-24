@@ -41,16 +41,17 @@ namespace Business.Concretes
             return new SuccessDataResult<CreateEmployeeResponse>(response, "Başarıyla eklendi");
         }
 
-        public async Task<IResult> DeleteAsync(DeleteEmployeeRequest request)
+        public async Task<IDataResult<DeleteEmployeeResponse>> DeleteAsync(DeleteEmployeeRequest request)
         {
-            Employee employee = await _employeeRepository.GetAsync(x=>x.Id == request.UserId);
+            Employee employee = await _employeeRepository.GetAsync(x => x.Id == request.UserId);
             await _employeeRepository.DeleteAsync(employee);
-            return new SuccessResult("Başarıyla silindi");
+            DeleteEmployeeResponse response = _mapper.Map<DeleteEmployeeResponse>(employee);
+            return new SuccessDataResult<DeleteEmployeeResponse>(response, "Başarıyla silindi");
         }
 
         public async Task<IDataResult<UpdateEmployeeResponse>> UpdateAsync(UpdateEmployeeRequest request)
         {
-            Employee employee = await _employeeRepository.GetAsync(x=>x.Id == request.UserId);
+            Employee employee = await _employeeRepository.GetAsync(x => x.Id == request.UserId);
             _mapper.Map(request, employee);
             await _employeeRepository.UpdateAsync(employee);
             UpdateEmployeeResponse response = _mapper.Map<UpdateEmployeeResponse>(employee);

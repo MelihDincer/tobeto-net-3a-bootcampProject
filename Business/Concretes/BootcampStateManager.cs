@@ -27,11 +27,12 @@ namespace Business.Concretes
             return new SuccessDataResult<CreateBootcampStateResponse>(response, "Ekleme işlemi başarılı");
         }
 
-        public async Task<IResult> DeleteAsync(DeleteBootcampStateRequest request)
+        public async Task<IDataResult<DeleteBootcampStateResponse>> DeleteAsync(DeleteBootcampStateRequest request)
         {
             BootcampState bootcamp = _mapper.Map<BootcampState>(request);
             await _bootcampStateRepository.DeleteAsync(bootcamp);
-            return new SuccessResult("Silme işlemi başarılı");
+            DeleteBootcampStateResponse response = _mapper.Map<DeleteBootcampStateResponse>(bootcamp);
+            return new SuccessDataResult<DeleteBootcampStateResponse>(response, "Silme işlemi başarılı");
         }
 
         public async Task<IDataResult<List<GetAllBootcampStateResponse>>> GetAllAsync()
@@ -43,14 +44,15 @@ namespace Business.Concretes
 
         public async Task<IDataResult<GetByIdBootcampStateResponse>> GetByIdAsync(int id)
         {
-            BootcampState bootcampState = await _bootcampStateRepository.GetAsync(x=>x.Id == id);
+            BootcampState bootcampState = await _bootcampStateRepository.GetAsync(x => x.Id == id);
             GetByIdBootcampStateResponse response = _mapper.Map<GetByIdBootcampStateResponse>(bootcampState);
             return new SuccessDataResult<GetByIdBootcampStateResponse>(response);
         }
 
         public async Task<IDataResult<UpdateBootcampStateResponse>> UpdateAsync(UpdateBootcampStateRequest request)
         {
-            BootcampState bootcampState = _mapper.Map<BootcampState>(request);
+            BootcampState bootcampState = await _bootcampStateRepository.GetAsync(x=>x.Id == request.Id);
+            _mapper.Map(request, bootcampState);
             await _bootcampStateRepository.UpdateAsync(bootcampState);
             UpdateBootcampStateResponse response = _mapper.Map<UpdateBootcampStateResponse>(bootcampState);
             return new SuccessDataResult<UpdateBootcampStateResponse>(response, "Güncelleme işlemi başarılı");
