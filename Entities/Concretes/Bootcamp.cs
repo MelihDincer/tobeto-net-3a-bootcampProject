@@ -10,12 +10,14 @@ namespace Entities.Concretes
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public Instructor Instructor { get; set; }
-        public BootcampState BootcampState { get; set; }    
+        public BootcampState BootcampState { get; set; }
         public ICollection<Application> Applications { get; set; }
+        public virtual ICollection<BootcampImage> BootcampImages { get; set; }
 
         public Bootcamp()
         {
             Applications = new HashSet<Application>();
+            BootcampImages = new HashSet<BootcampImage>();
         }
     }
 }
