@@ -19,6 +19,7 @@ namespace DataAccess.Concretes.EntityFramework.EntityTypeConfigurations
             builder.HasOne(x => x.Instructor);
             builder.HasOne(x => x.BootcampState);
             builder.HasMany(x => x.Applications);
+            builder.HasMany(x => x.BootcampImages);
         }
     }
 }
