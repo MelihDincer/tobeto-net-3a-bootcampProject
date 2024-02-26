@@ -37,7 +37,6 @@ namespace Business.Concretes
         {
             Application application = _mapper.Map<Application>(request);
             await _applicationRepository.AddAsync(application);
-
             CreateApplicationResponse response = _mapper.Map<CreateApplicationResponse>(application);
             return new SuccessDataResult<CreateApplicationResponse>(response, "Başvuru ekleme başarılı.");
         }
