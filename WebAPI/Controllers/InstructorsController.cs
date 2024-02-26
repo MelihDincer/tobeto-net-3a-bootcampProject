@@ -1,7 +1,5 @@
 ﻿using Business.Abstracts;
 using Business.Requests.Instructors;
-using Business.Responses.Instructors;
-using Core.Utilities.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -38,7 +36,7 @@ namespace WebAPI.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteAsync(DeleteInstructorRequest request)
         {
-            return HandleDataResult(await _instructorService.DeleteAsync(request));
+            return HandleResult(await _instructorService.DeleteAsync(request));
         }
 
         [HttpPut]
@@ -47,4 +45,5 @@ namespace WebAPI.Controllers
             return HandleDataResult(await _instructorService.UpdateAsync(request));
         }
     }
+
 }

@@ -14,7 +14,6 @@ namespace Business.Profiles.Employees
             CreateMap<Employee, UpdateEmployeeRequest>().ReverseMap();
 
             CreateMap<Employee, CreateEmployeeResponse>().ReverseMap();
-            CreateMap<Employee, DeleteEmployeeResponse>().ReverseMap();
             CreateMap<Employee, UpdateEmployeeResponse>().ReverseMap();
             CreateMap<Employee, GetAllEmployeeResponse>().ReverseMap();
             CreateMap<Employee, GetByIdEmployeeResponse>().ReverseMap();

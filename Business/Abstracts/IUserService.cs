@@ -7,8 +7,5 @@ namespace Business.Abstracts
     {
         Task<IDataResult<List<GetAllUserResponse>>> GetAllAsync();
         Task<IDataResult<GetByIdUserResponse>> GetByIdAsync(int id);
-
-        //List<GetAllUserResponse> GetAll();
-        //GetByIdUserResponse GetById(int id);
     }
 }

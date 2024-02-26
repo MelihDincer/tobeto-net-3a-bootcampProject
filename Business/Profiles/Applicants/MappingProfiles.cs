@@ -17,7 +17,6 @@ namespace Business.Profiles.Applicants
             CreateMap<Applicant, GetByIdApplicantResponse>().ReverseMap();
             CreateMap<Applicant, CreateApplicantResponse>().ReverseMap();
             CreateMap<Applicant, UpdateApplicantResponse>().ReverseMap();
-            CreateMap<Applicant, DeleteApplicantResponse>().ReverseMap();
         }
     }
 }

@@ -1,7 +1,5 @@
 ﻿using Business.Abstracts;
 using Business.Requests.Bootcamps;
-using Business.Responses.Bootcamps;
-using Core.Utilities.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -38,7 +36,7 @@ namespace WebAPI.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteAsync(DeleteBootcampRequest request)
         {
-            return HandleDataResult(await _bootcampService.DeleteAsync(request));
+            return HandleResult(await _bootcampService.DeleteAsync(request));
         }
 
         [HttpPut]

@@ -1,7 +1,5 @@
 ﻿using Business.Abstracts;
 using Business.Requests.Applicants;
-using Business.Responses.Applicants;
-using Core.Utilities.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -38,7 +36,7 @@ namespace WebAPI.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteAsync(DeleteApplicantRequest request)
         {
-            return HandleDataResult(await _applicantService.DeleteAsync(request));
+            return HandleResult(await _applicantService.DeleteAsync(request));
         }
 
         [HttpPut]

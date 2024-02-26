@@ -20,22 +20,6 @@ namespace Business.Concretes
             _mapper = mapper;
         }
 
-        public async Task<IDataResult<CreateApplicationStateResponse>> AddAsync(CreateApplicationStateRequest request)
-        {
-            ApplicationState applicationState = _mapper.Map<ApplicationState>(request);
-            await _applicationStateRepository.AddAsync(applicationState);
-            CreateApplicationStateResponse response = _mapper.Map<CreateApplicationStateResponse>(applicationState);
-            return new SuccessDataResult<CreateApplicationStateResponse>(response, "Ekleme işlemi başarılı");
-        }
-
-        public async Task<IDataResult<DeleteApplicationStateResponse>> DeleteAsync(DeleteApplicationStateRequest request)
-        {
-            ApplicationState applicationState = _mapper.Map<ApplicationState>(request);
-            await _applicationStateRepository.DeleteAsync(applicationState);
-            DeleteApplicationStateResponse response = _mapper.Map<DeleteApplicationStateResponse>(applicationState);
-            return new SuccessDataResult<DeleteApplicationStateResponse>(response, "Silme işlemi başarılı");
-        }
-
         public async Task<IDataResult<List<GetAllApplicationStateResponse>>> GetAllAsync()
         {
             List<ApplicationState> applicationStates = await _applicationStateRepository.GetAllAsync();
@@ -48,6 +32,21 @@ namespace Business.Concretes
             ApplicationState applicationState = await _applicationStateRepository.GetAsync(x => x.Id == id);
             GetByIdApplicationStateResponse response = _mapper.Map<GetByIdApplicationStateResponse>(applicationState);
             return new SuccessDataResult<GetByIdApplicationStateResponse>(response);
+        }
+
+        public async Task<IDataResult<CreateApplicationStateResponse>> AddAsync(CreateApplicationStateRequest request)
+        {
+            ApplicationState applicationState = _mapper.Map<ApplicationState>(request);
+            await _applicationStateRepository.AddAsync(applicationState);
+            CreateApplicationStateResponse response = _mapper.Map<CreateApplicationStateResponse>(applicationState);
+            return new SuccessDataResult<CreateApplicationStateResponse>(response, "Ekleme işlemi başarılı");
+        }
+
+        public async Task<IResult> DeleteAsync(DeleteApplicationStateRequest request)
+        {
+            ApplicationState applicationState = _mapper.Map<ApplicationState>(request);
+            await _applicationStateRepository.DeleteAsync(applicationState);
+            return new SuccessResult("Silme işlemi başarılı");
         }
 
         public async Task<IDataResult<UpdateApplicationStateResponse>> UpdateAsync(UpdateApplicationStateRequest request)

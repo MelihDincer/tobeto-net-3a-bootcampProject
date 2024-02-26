@@ -14,7 +14,6 @@ namespace Business.Profiles.Bootcamps
             CreateMap<Bootcamp, UpdateBootcampRequest>().ReverseMap();
 
             CreateMap<Bootcamp, CreateBootcampResponse>().ReverseMap();
-            CreateMap<Bootcamp, DeleteBootcampResponse>().ReverseMap();
             CreateMap<Bootcamp, UpdateBootcampResponse>().ReverseMap();
             CreateMap<Bootcamp, GetAllBootcampResponse>().ReverseMap();
             CreateMap<Bootcamp, GetByIdBootcampResponse>().ReverseMap();

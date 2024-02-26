@@ -40,12 +40,11 @@ namespace Business.Concretes
             return new SuccessDataResult<CreateApplicantResponse>(response, "Ekleme işlemi başarılı");
         }
 
-        public async Task<IDataResult<DeleteApplicantResponse>> DeleteAsync(DeleteApplicantRequest request)
+        public async Task<IResult> DeleteAsync(DeleteApplicantRequest request)
         {
-            Applicant applicant = _applicantRepository.Get(x => x.Id == request.UserId);
+            Applicant applicant = _mapper.Map<Applicant>(request);
             await _applicantRepository.DeleteAsync(applicant);
-            DeleteApplicantResponse response = _mapper.Map<DeleteApplicantResponse>(applicant);
-            return new SuccessDataResult<DeleteApplicantResponse>(response, "Başarıyla silindi");
+            return new SuccessResult("Başarıyla silindi");
         }
 
         public async Task<IDataResult<UpdateApplicantResponse>> UpdateAsync(UpdateApplicantRequest request)

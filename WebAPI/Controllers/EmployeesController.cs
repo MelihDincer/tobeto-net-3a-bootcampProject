@@ -1,7 +1,5 @@
 ﻿using Business.Abstracts;
 using Business.Requests.Employees;
-using Business.Responses.Employees;
-using Core.Utilities.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -38,7 +36,7 @@ namespace WebAPI.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteAsync(DeleteEmployeeRequest request)
         {
-            return HandleDataResult(await _employeeService.DeleteAsync(request));
+            return HandleResult(await _employeeService.DeleteAsync(request));
         }
 
         [HttpPut]

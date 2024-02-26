@@ -41,12 +41,11 @@ namespace Business.Concretes
             return new SuccessDataResult<CreateInstructorResponse>(response, "Başarıyla eklendi");
         }
 
-        public async Task<IDataResult<DeleteInstructorResponse>> DeleteAsync(DeleteInstructorRequest request)
+        public async Task<IResult> DeleteAsync(DeleteInstructorRequest request)
         {
-            Instructor instructor = await _instructorRepository.GetAsync(x => x.Id == request.UserId);
+            Instructor instructor = _mapper.Map<Instructor>(request);
             await _instructorRepository.DeleteAsync(instructor);
-            DeleteInstructorResponse response = _mapper.Map<DeleteInstructorResponse>(instructor);
-            return new SuccessDataResult<DeleteInstructorResponse>(response, "Başarıyla silindi");
+            return new SuccessResult("Başarıyla silindi");
         }
 
         public async Task<IDataResult<UpdateInstructorResponse>> UpdateAsync(UpdateInstructorRequest request)

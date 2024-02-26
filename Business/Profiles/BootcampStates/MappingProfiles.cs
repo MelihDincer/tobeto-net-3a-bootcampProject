@@ -14,7 +14,6 @@ namespace Business.Profiles.BootcampStateStates
             CreateMap<BootcampState, UpdateBootcampStateRequest>().ReverseMap();
 
             CreateMap<BootcampState, CreateBootcampStateResponse>().ReverseMap();
-            CreateMap<BootcampState, DeleteBootcampStateResponse>().ReverseMap();
             CreateMap<BootcampState, UpdateBootcampStateResponse>().ReverseMap();
             CreateMap<BootcampState, GetAllBootcampStateResponse>().ReverseMap();
             CreateMap<BootcampState, GetByIdBootcampStateResponse>().ReverseMap();

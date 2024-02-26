@@ -6,7 +6,6 @@ using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
 using Microsoft.EntityFrameworkCore;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Business.Concretes
 {
@@ -21,22 +20,6 @@ namespace Business.Concretes
             _mapper = mapper;
         }
 
-        public async Task<IDataResult<CreateBootcampResponse>> AddAsync(CreateBootcampRequest request)
-        {
-            Bootcamp bootcamp = _mapper.Map<Bootcamp>(request);
-            await _bootcampRepository.AddAsync(bootcamp);
-            CreateBootcampResponse response = _mapper.Map<CreateBootcampResponse>(bootcamp);
-            return new SuccessDataResult<CreateBootcampResponse>(response, "Ekleme işlemi başarılı");
-        }
-
-        public async Task<IDataResult<DeleteBootcampResponse>> DeleteAsync(DeleteBootcampRequest request)
-        {
-            Bootcamp bootcamp = _mapper.Map<Bootcamp>(request);
-            await _bootcampRepository.DeleteAsync(bootcamp);
-            DeleteBootcampResponse response = _mapper.Map<DeleteBootcampResponse>(bootcamp);
-            return new SuccessDataResult<DeleteBootcampResponse>(response, "Silme işlemi başarılı");
-        }
-
         public async Task<IDataResult<List<GetAllBootcampResponse>>> GetAllAsync()
         {
             List<Bootcamp> bootcamps = await _bootcampRepository.GetAllAsync(include: x => x.Include(x => x.Instructor).Include(x => x.BootcampState));
@@ -49,6 +32,21 @@ namespace Business.Concretes
             Bootcamp bootcamp = await _bootcampRepository.GetAsync(x => x.Id == id, include: x => x.Include(x => x.Instructor).Include(x => x.BootcampState));
             GetByIdBootcampResponse response = _mapper.Map<GetByIdBootcampResponse>(bootcamp);
             return new SuccessDataResult<GetByIdBootcampResponse>(response);
+        }
+
+        public async Task<IDataResult<CreateBootcampResponse>> AddAsync(CreateBootcampRequest request)
+        {
+            Bootcamp bootcamp = _mapper.Map<Bootcamp>(request);
+            await _bootcampRepository.AddAsync(bootcamp);
+            CreateBootcampResponse response = _mapper.Map<CreateBootcampResponse>(bootcamp);
+            return new SuccessDataResult<CreateBootcampResponse>(response, "Ekleme işlemi başarılı");
+        }
+
+        public async Task<IResult> DeleteAsync(DeleteBootcampRequest request)
+        {
+            Bootcamp bootcamp = _mapper.Map<Bootcamp>(request);
+            await _bootcampRepository.DeleteAsync(bootcamp);
+            return new SuccessResult("Silme işlemi başarılı");
         }
 
         public async Task<IDataResult<UpdateBootcampResponse>> UpdateAsync(UpdateBootcampRequest request)

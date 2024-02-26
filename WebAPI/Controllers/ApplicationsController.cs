@@ -1,12 +1,11 @@
 ﻿using Business.Abstracts;
 using Business.Requests.Applications;
-using Business.Responses.Applications;
-using Core.Utilities.Results;
 using Microsoft.AspNetCore.Mvc;
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class ApplicationsController : BaseController
     {
         private readonly IApplicationService _applicationService;
@@ -37,7 +36,7 @@ namespace WebAPI.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteAsync(DeleteApplicationRequest request)
         {
-            return HandleDataResult(await _applicationService.DeleteAsync(request));
+            return HandleResult(await _applicationService.DeleteAsync(request));
         }
 
         [HttpPut]
@@ -46,5 +45,4 @@ namespace WebAPI.Controllers
             return HandleDataResult(await _applicationService.UpdateAsync(request));
         }
     }
-
 }
