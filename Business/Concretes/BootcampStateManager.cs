@@ -2,8 +2,10 @@
 using Business.Abstracts;
 using Business.Requests.BootcampStates;
 using Business.Responses.BootcampStates;
+using Core.Exceptions.Types;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
+using DataAccess.Repositories;
 using Entities.Concretes;
 
 namespace Business.Concretes
@@ -28,6 +30,7 @@ namespace Business.Concretes
 
         public async Task<IDataResult<GetByIdBootcampStateResponse>> GetByIdAsync(int id)
         {
+            await CheckIfBootcampStateNotExists(id);
             BootcampState bootcampState = await _bootcampStateRepository.GetAsync(x => x.Id == id);
             GetByIdBootcampStateResponse response = _mapper.Map<GetByIdBootcampStateResponse>(bootcampState);
             return new SuccessDataResult<GetByIdBootcampStateResponse>(response);
@@ -43,6 +46,7 @@ namespace Business.Concretes
 
         public async Task<IResult> DeleteAsync(DeleteBootcampStateRequest request)
         {
+            await CheckIfBootcampStateNotExists(request.Id);
             BootcampState bootcamp = _mapper.Map<BootcampState>(request);
             await _bootcampStateRepository.DeleteAsync(bootcamp);
             return new SuccessResult("Silme işlemi başarılı");
@@ -50,11 +54,19 @@ namespace Business.Concretes
 
         public async Task<IDataResult<UpdateBootcampStateResponse>> UpdateAsync(UpdateBootcampStateRequest request)
         {
+            await CheckIfBootcampStateNotExists(request.Id);
             BootcampState bootcampState = await _bootcampStateRepository.GetAsync(x=>x.Id == request.Id);
             _mapper.Map(request, bootcampState);
             await _bootcampStateRepository.UpdateAsync(bootcampState);
             UpdateBootcampStateResponse response = _mapper.Map<UpdateBootcampStateResponse>(bootcampState);
             return new SuccessDataResult<UpdateBootcampStateResponse>(response, "Güncelleme işlemi başarılı");
+        }
+
+        private async Task CheckIfBootcampStateNotExists(int id)
+        {
+            var isExists = await _bootcampStateRepository.GetAsync(a => a.Id == id);
+            if (isExists is not null)
+                throw new BusinessException("BootcampState does not exists");
         }
     }
 }

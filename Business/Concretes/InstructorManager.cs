@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Business.Abstracts;
 using Business.Requests.Instructors;
 using Business.Responses.Instructors;
+using Core.Exceptions.Types;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using DataAccess.Repositories;
@@ -28,6 +30,7 @@ namespace Business.Concretes
 
         public async Task<IDataResult<GetByIdInstructorResponse>> GetByIdAsync(int id)
         {
+            await CheckIfInstructorNotExists(id);
             Instructor instructor = await _instructorRepository.GetAsync(x => x.Id == id);
             GetByIdInstructorResponse response = _mapper.Map<GetByIdInstructorResponse>(instructor);
             return new SuccessDataResult<GetByIdInstructorResponse>(response);
@@ -43,18 +46,27 @@ namespace Business.Concretes
 
         public async Task<IResult> DeleteAsync(DeleteInstructorRequest request)
         {
-            Instructor instructor = _mapper.Map<Instructor>(request);
+            await CheckIfInstructorNotExists(request.UserId);
+            Instructor instructor = await _instructorRepository.GetAsync(i => i.Id == request.UserId);
             await _instructorRepository.DeleteAsync(instructor);
             return new SuccessResult("Başarıyla silindi");
         }
 
         public async Task<IDataResult<UpdateInstructorResponse>> UpdateAsync(UpdateInstructorRequest request)
         {
+            await CheckIfInstructorNotExists(request.UserId);
             Instructor instructor = await _instructorRepository.GetAsync(x => x.Id == request.UserId);
             _mapper.Map(request, instructor);
             await _instructorRepository.UpdateAsync(instructor);
             UpdateInstructorResponse response = _mapper.Map<UpdateInstructorResponse>(instructor);
             return new SuccessDataResult<UpdateInstructorResponse>(response, "Başarıyla güncellendi");
+        }
+
+        private async Task CheckIfInstructorNotExists(int instructorId)
+        {
+            var isExists = await _instructorRepository.GetAsync(a => a.Id == instructorId);
+            if (isExists is null)
+                throw new BusinessException("Instructor does not exists");
         }
     }
 }
