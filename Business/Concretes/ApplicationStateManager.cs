@@ -65,7 +65,7 @@ namespace Business.Concretes
         private async Task CheckIfApplicationStateNotExists(int id)
         {
             var isExists = await _applicationStateRepository.GetAsync(a => a.Id == id);
-            if (isExists is not null)
+            if (isExists is null)
                 throw new BusinessException("ApplicationState does not exists");
         }
     }

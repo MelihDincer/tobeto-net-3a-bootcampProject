@@ -65,7 +65,7 @@ namespace Business.Concretes
         private async Task CheckIfBootcampStateNotExists(int id)
         {
             var isExists = await _bootcampStateRepository.GetAsync(a => a.Id == id);
-            if (isExists is not null)
+            if (isExists is null)
                 throw new BusinessException("BootcampState does not exists");
         }
     }

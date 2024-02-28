@@ -49,7 +49,7 @@ namespace Business.Concretes
         public async Task<IResult> DeleteAsync(DeleteApplicationRequest request)
         {
             await CheckIfApplicationNotExists(request.Id);
-            Application application = _mapper.Map<Application>(request);
+            Application application = await _applicationRepository.GetAsync(a => a.Id == request.Id);
             await _applicationRepository.DeleteAsync(application);
             return new SuccessResult("Başvuru silme başarılı.");
         }
@@ -73,8 +73,8 @@ namespace Business.Concretes
 
         private async Task CheckIfApplicationNotExists(int applicationId)
         {
-            var isExists = await _blackListService.GetByIdAsync(applicationId);
-            if (isExists is not null)
+            var isExists = await _applicationRepository.GetAsync(a => a.Id == applicationId);
+            if (isExists is null)
                 throw new BusinessException("Application does not exists");
         }
     }
