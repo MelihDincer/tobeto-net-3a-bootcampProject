@@ -2,7 +2,7 @@
 using Business.Abstracts;
 using Business.Requests.Applicants;
 using Business.Responses.Applicants;
-using Core.Exceptions.Types;
+using Business.Rules;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
@@ -13,10 +13,12 @@ namespace Business.Concretes
     {
         private readonly IApplicantRepository _applicantRepository;
         private readonly IMapper _mapper;
-        public ApplicantManager(IApplicantRepository applicantRepository, IMapper mapper)
+        private readonly ApplicantBusinessRules _rules;
+        public ApplicantManager(IApplicantRepository applicantRepository, IMapper mapper, ApplicantBusinessRules rules)
         {
             _applicantRepository = applicantRepository;
             _mapper = mapper;
+            _rules = rules;
         }
 
         public async Task<IDataResult<List<GetAllApplicantResponse>>> GetAllAsync()
@@ -28,7 +30,7 @@ namespace Business.Concretes
 
         public async Task<IDataResult<GetByIdApplicantResponse>> GetByIdAsync(int id)
         {
-            await CheckIfApplicantNotExists(id);
+            await _rules.CheckIfApplicantNotExists(id);
             Applicant applicant = await _applicantRepository.GetAsync(x => x.Id == id);
             GetByIdApplicantResponse response = _mapper.Map<GetByIdApplicantResponse>(applicant);
             return new SuccessDataResult<GetByIdApplicantResponse>(response);
@@ -44,7 +46,7 @@ namespace Business.Concretes
 
         public async Task<IResult> DeleteAsync(DeleteApplicantRequest request)
         {
-            await CheckIfApplicantNotExists(request.UserId);
+            await _rules.CheckIfApplicantNotExists(request.UserId);
             Applicant applicant = await _applicantRepository.GetAsync(a => a.Id == request.UserId);
             await _applicantRepository.DeleteAsync(applicant);
             return new SuccessResult("Başarıyla silindi");
@@ -52,19 +54,12 @@ namespace Business.Concretes
 
         public async Task<IDataResult<UpdateApplicantResponse>> UpdateAsync(UpdateApplicantRequest request)
         {
-            await CheckIfApplicantNotExists(request.UserId);
+            await _rules.CheckIfApplicantNotExists(request.UserId);
             Applicant applicant = await _applicantRepository.GetAsync(x => x.Id == request.UserId);
             _mapper.Map(request, applicant);
             await _applicantRepository.UpdateAsync(applicant);
             UpdateApplicantResponse response = _mapper.Map<UpdateApplicantResponse>(applicant);
             return new SuccessDataResult<UpdateApplicantResponse>(response, "Güncelleme başarılı");
-        }
-
-        private async Task CheckIfApplicantNotExists(int applicantId)
-        {
-            var isExists = await _applicantRepository.GetAsync(a => a.Id == applicantId);
-            if (isExists is null)
-                throw new BusinessException("Applicant does not exists");
         }
     }
 }

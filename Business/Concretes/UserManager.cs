@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
 using Business.Responses.Users;
-using Core.Exceptions.Types;
+using Business.Rules;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
-using DataAccess.Repositories;
 using Entities.Concretes;
 
 namespace Business.Concretes
@@ -13,11 +12,13 @@ namespace Business.Concretes
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly UserBusinessRules _rules;
 
-        public UserManager(IUserRepository userRepository, IMapper mapper)
+        public UserManager(IUserRepository userRepository, IMapper mapper, UserBusinessRules rules)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _rules = rules;
         }
         public async Task<IDataResult<List<GetAllUserResponse>>> GetAllAsync()
         {
@@ -28,17 +29,10 @@ namespace Business.Concretes
 
         public async Task<IDataResult<GetByIdUserResponse>> GetByIdAsync(int id)
         {
-            await CheckIfUserNotExists(id);
+            await _rules.CheckIfUserNotExists(id);
             User user = await _userRepository.GetAsync(x => x.Id == id);
             GetByIdUserResponse response = _mapper.Map<GetByIdUserResponse>(user);
             return new SuccessDataResult<GetByIdUserResponse>(response);
-        }
-
-        private async Task CheckIfUserNotExists(int userId)
-        {
-            var isExists = await _userRepository.GetAsync(u => u.Id == userId);
-            if (isExists is null)
-                throw new BusinessException("User does not exists");
         }
     }
 }

@@ -2,6 +2,7 @@
 using Business.Abstracts;
 using Business.Requests.Applications;
 using Business.Responses.Applications;
+using Business.Rules;
 using Core.Exceptions.Types;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
@@ -14,13 +15,13 @@ namespace Business.Concretes
     {
         private readonly IApplicationRepository _applicationRepository;
         private readonly IMapper _mapper;
-        private readonly IBlackListService _blackListService;
+        private readonly ApplicationBusinessRules _rules;
 
-        public ApplicationManager(IApplicationRepository applicationRepository, IMapper mapper, IBlackListService blackListService)
+        public ApplicationManager(IApplicationRepository applicationRepository, IMapper mapper, ApplicationBusinessRules rules)
         {
             _applicationRepository = applicationRepository;
             _mapper = mapper;
-            _blackListService = blackListService;
+            _rules = rules;
         }
         public async Task<IDataResult<List<GetAllApplicationResponse>>> GetAllAsync()
         {
@@ -31,7 +32,7 @@ namespace Business.Concretes
 
         public async Task<IDataResult<GetByIdApplicationResponse>> GetByIdAsync(int id)
         {
-            await CheckIfApplicationNotExists(id);
+            await _rules.CheckIfApplicationNotExists(id);
             Application application = await _applicationRepository.GetAsync(x => x.Id == id, include: x => x.Include(x => x.Applicant).Include(x => x.Bootcamp).Include(x => x.ApplicationState));
             GetByIdApplicationResponse response = _mapper.Map<GetByIdApplicationResponse>(application);
             return new SuccessDataResult<GetByIdApplicationResponse>(response);
@@ -39,7 +40,7 @@ namespace Business.Concretes
 
         public async Task<IDataResult<CreateApplicationResponse>> AddAsync(CreateApplicationRequest request)
         {
-            await CheckIfApplicantIsBlackList(request.ApplicantId);
+            await _rules.CheckIfApplicantIsBlackList(request.ApplicantId);
             Application application = _mapper.Map<Application>(request);
             await _applicationRepository.AddAsync(application);
             CreateApplicationResponse response = _mapper.Map<CreateApplicationResponse>(application);
@@ -48,7 +49,7 @@ namespace Business.Concretes
 
         public async Task<IResult> DeleteAsync(DeleteApplicationRequest request)
         {
-            await CheckIfApplicationNotExists(request.Id);
+            await _rules.CheckIfApplicationNotExists(request.Id);
             Application application = await _applicationRepository.GetAsync(a => a.Id == request.Id);
             await _applicationRepository.DeleteAsync(application);
             return new SuccessResult("Başvuru silme başarılı.");
@@ -56,26 +57,12 @@ namespace Business.Concretes
 
         public async Task<IDataResult<UpdateApplicationResponse>> UpdateAsync(UpdateApplicationRequest request)
         {
-            await CheckIfApplicationNotExists(request.Id);
+            await _rules.CheckIfApplicationNotExists(request.Id);
             Application application = await _applicationRepository.GetAsync(x => x.Id == request.Id);
             _mapper.Map(request, application);
             await _applicationRepository.UpdateAsync(application);
             UpdateApplicationResponse response = _mapper.Map<UpdateApplicationResponse>(application);
             return new SuccessDataResult<UpdateApplicationResponse>(response, "Güncelleme başarılı");
-        }
-
-        private async Task CheckIfApplicantIsBlackList(int applicantId)
-        {
-            var applicant = await _blackListService.GetByApplicantIdAsync(applicantId);
-            if (applicant.Data is not null)
-                throw new BusinessException("Applicant is in BlackList");
-        }
-
-        private async Task CheckIfApplicationNotExists(int applicationId)
-        {
-            var isExists = await _applicationRepository.GetAsync(a => a.Id == applicationId);
-            if (isExists is null)
-                throw new BusinessException("Application does not exists");
         }
     }
 }

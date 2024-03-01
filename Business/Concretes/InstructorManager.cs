@@ -3,6 +3,7 @@ using Azure.Core;
 using Business.Abstracts;
 using Business.Requests.Instructors;
 using Business.Responses.Instructors;
+using Business.Rules;
 using Core.Exceptions.Types;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
@@ -15,11 +16,13 @@ namespace Business.Concretes
     {
         private readonly IInstructorRepository _instructorRepository;
         private readonly IMapper _mapper;
+        private readonly InstructorBusinessRules _rules;
 
-        public InstructorManager(IInstructorRepository instructorRepository, IMapper mapper)
+        public InstructorManager(IInstructorRepository instructorRepository, IMapper mapper, InstructorBusinessRules rules)
         {
             _instructorRepository = instructorRepository;
             _mapper = mapper;
+            _rules = rules;
         }
         public async Task<IDataResult<List<GetAllInstructorResponse>>> GetAllAsync()
         {
@@ -30,7 +33,7 @@ namespace Business.Concretes
 
         public async Task<IDataResult<GetByIdInstructorResponse>> GetByIdAsync(int id)
         {
-            await CheckIfInstructorNotExists(id);
+            await _rules.CheckIfInstructorNotExists(id);
             Instructor instructor = await _instructorRepository.GetAsync(x => x.Id == id);
             GetByIdInstructorResponse response = _mapper.Map<GetByIdInstructorResponse>(instructor);
             return new SuccessDataResult<GetByIdInstructorResponse>(response);
@@ -46,7 +49,7 @@ namespace Business.Concretes
 
         public async Task<IResult> DeleteAsync(DeleteInstructorRequest request)
         {
-            await CheckIfInstructorNotExists(request.UserId);
+            await _rules.CheckIfInstructorNotExists(request.UserId);
             Instructor instructor = await _instructorRepository.GetAsync(i => i.Id == request.UserId);
             await _instructorRepository.DeleteAsync(instructor);
             return new SuccessResult("Başarıyla silindi");
@@ -54,19 +57,12 @@ namespace Business.Concretes
 
         public async Task<IDataResult<UpdateInstructorResponse>> UpdateAsync(UpdateInstructorRequest request)
         {
-            await CheckIfInstructorNotExists(request.UserId);
+            await _rules.CheckIfInstructorNotExists(request.UserId);
             Instructor instructor = await _instructorRepository.GetAsync(x => x.Id == request.UserId);
             _mapper.Map(request, instructor);
             await _instructorRepository.UpdateAsync(instructor);
             UpdateInstructorResponse response = _mapper.Map<UpdateInstructorResponse>(instructor);
             return new SuccessDataResult<UpdateInstructorResponse>(response, "Başarıyla güncellendi");
-        }
-
-        private async Task CheckIfInstructorNotExists(int instructorId)
-        {
-            var isExists = await _instructorRepository.GetAsync(a => a.Id == instructorId);
-            if (isExists is null)
-                throw new BusinessException("Instructor does not exists");
         }
     }
 }

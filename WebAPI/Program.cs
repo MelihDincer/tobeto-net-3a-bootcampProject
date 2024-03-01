@@ -21,6 +21,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.ConfigureCustomExceptionMiddleware();
 }
+
+if (app.Environment.IsProduction())
+{
+    app.ConfigureCustomExceptionMiddleware();
+}
+
 app.UseAuthorization();
 
 app.MapControllers();
