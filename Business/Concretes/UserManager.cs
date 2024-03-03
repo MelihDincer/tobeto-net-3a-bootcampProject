@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.Constants;
 using Business.Responses.Users;
 using Business.Rules;
 using Core.Utilities.Results;
@@ -24,7 +25,7 @@ namespace Business.Concretes
         {
             List<User> users = await _userRepository.GetAllAsync();
             List<GetAllUserResponse> responses = _mapper.Map<List<GetAllUserResponse>>(users);
-            return new SuccessDataResult<List<GetAllUserResponse>>(responses, "Bilgiler başarıyla listelendi");
+            return new SuccessDataResult<List<GetAllUserResponse>>(responses, UserMessages.UsersListed);
         }
 
         public async Task<IDataResult<GetByIdUserResponse>> GetByIdAsync(int id)

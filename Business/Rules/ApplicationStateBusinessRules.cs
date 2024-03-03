@@ -1,4 +1,5 @@
-﻿using Core.CrossCuttingConcerns.Rules;
+﻿using Business.Constants;
+using Core.CrossCuttingConcerns.Rules;
 using Core.Exceptions.Types;
 using DataAccess.Abstracts;
 
@@ -18,6 +19,13 @@ namespace Business.Rules
             var isExists = await _applicationStateRepository.GetAsync(a => a.Id == id);
             if (isExists is null)
                 throw new BusinessException("ApplicationState does not exists");
+        }
+
+        public async Task CheckApplicationStateNameIfExist(string name)
+        {
+            var isExists = await _applicationStateRepository.GetAsync(a => a.Name == name);
+            if (isExists is not null)
+                throw new BusinessException(ApplicationStateMessages.ApplicationStateNameCheck);
         }
     }
 }

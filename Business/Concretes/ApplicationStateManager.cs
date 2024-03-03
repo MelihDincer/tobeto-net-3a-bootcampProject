@@ -39,6 +39,7 @@ namespace Business.Concretes
 
         public async Task<IDataResult<CreateApplicationStateResponse>> AddAsync(CreateApplicationStateRequest request)
         {
+            await _rules.CheckApplicationStateNameIfExist(request.Name);
             ApplicationState applicationState = _mapper.Map<ApplicationState>(request);
             await _applicationStateRepository.AddAsync(applicationState);
             CreateApplicationStateResponse response = _mapper.Map<CreateApplicationStateResponse>(applicationState);
@@ -56,6 +57,7 @@ namespace Business.Concretes
         public async Task<IDataResult<UpdateApplicationStateResponse>> UpdateAsync(UpdateApplicationStateRequest request)
         {
             await _rules.CheckIfApplicationStateNotExists(request.Id);
+            await _rules.CheckApplicationStateNameIfExist(request.Name);
             ApplicationState applicationState = await _applicationStateRepository.GetAsync(x => x.Id == request.Id);
             _mapper.Map(request, applicationState);
             await _applicationStateRepository.UpdateAsync(applicationState);
