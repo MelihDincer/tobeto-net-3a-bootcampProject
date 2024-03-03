@@ -18,7 +18,7 @@ namespace Business.Rules
         {
             var isExists = await _applicationStateRepository.GetAsync(a => a.Id == id);
             if (isExists is null)
-                throw new BusinessException("ApplicationState does not exists");
+                throw new BusinessException(ApplicationStateMessages.ApplicationStateIdCheck);
         }
 
         public async Task CheckApplicationStateNameIfExist(string name)

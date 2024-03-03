@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.Constants;
 using Business.Requests.ApplicationStates;
 using Business.Responses.ApplicationStates;
 using Business.Rules;
@@ -26,7 +27,7 @@ namespace Business.Concretes
         {
             List<ApplicationState> applicationStates = await _applicationStateRepository.GetAllAsync();
             List<GetAllApplicationStateResponse> responses = _mapper.Map<List<GetAllApplicationStateResponse>>(applicationStates);
-            return new SuccessDataResult<List<GetAllApplicationStateResponse>>(responses, "Veriler başarıyla listelendi.");
+            return new SuccessDataResult<List<GetAllApplicationStateResponse>>(responses, ApplicationStateMessages.ApplicationStatesListed);
         }
 
         public async Task<IDataResult<GetByIdApplicationStateResponse>> GetByIdAsync(int id)
@@ -43,7 +44,7 @@ namespace Business.Concretes
             ApplicationState applicationState = _mapper.Map<ApplicationState>(request);
             await _applicationStateRepository.AddAsync(applicationState);
             CreateApplicationStateResponse response = _mapper.Map<CreateApplicationStateResponse>(applicationState);
-            return new SuccessDataResult<CreateApplicationStateResponse>(response, "Ekleme işlemi başarılı");
+            return new SuccessDataResult<CreateApplicationStateResponse>(response, ApplicationStateMessages.ApplicationStateAdded);
         }
 
         public async Task<IResult> DeleteAsync(DeleteApplicationStateRequest request)
@@ -51,7 +52,7 @@ namespace Business.Concretes
             await _rules.CheckIfApplicationStateNotExists(request.Id);
             ApplicationState applicationState = _mapper.Map<ApplicationState>(request);
             await _applicationStateRepository.DeleteAsync(applicationState);
-            return new SuccessResult("Silme işlemi başarılı");
+            return new SuccessResult(ApplicationStateMessages.ApplicationStateDeleted);
         }
 
         public async Task<IDataResult<UpdateApplicationStateResponse>> UpdateAsync(UpdateApplicationStateRequest request)
@@ -62,7 +63,7 @@ namespace Business.Concretes
             _mapper.Map(request, applicationState);
             await _applicationStateRepository.UpdateAsync(applicationState);
             UpdateApplicationStateResponse response = _mapper.Map<UpdateApplicationStateResponse>(applicationState);
-            return new SuccessDataResult<UpdateApplicationStateResponse>(response, "Güncelleme işlemi başarılı");
+            return new SuccessDataResult<UpdateApplicationStateResponse>(response, ApplicationStateMessages.ApplicationStateUpdated);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.Constants;
 using Business.Requests.BootcampStates;
 using Business.Responses.BootcampStates;
 using Business.Rules;
@@ -26,7 +27,7 @@ namespace Business.Concretes
         {
             List<BootcampState> bootcampStates = await _bootcampStateRepository.GetAllAsync();
             List<GetAllBootcampStateResponse> responses = _mapper.Map<List<GetAllBootcampStateResponse>>(bootcampStates);
-            return new SuccessDataResult<List<GetAllBootcampStateResponse>>(responses, "Listeleme başarılı");
+            return new SuccessDataResult<List<GetAllBootcampStateResponse>>(responses, BootcampStateMessages.BootcampStatesListed);
         }
 
         public async Task<IDataResult<GetByIdBootcampStateResponse>> GetByIdAsync(int id)
@@ -43,7 +44,7 @@ namespace Business.Concretes
             BootcampState bootcampState = _mapper.Map<BootcampState>(request);
             await _bootcampStateRepository.AddAsync(bootcampState);
             CreateBootcampStateResponse response = _mapper.Map<CreateBootcampStateResponse>(bootcampState);
-            return new SuccessDataResult<CreateBootcampStateResponse>(response, "Ekleme işlemi başarılı");
+            return new SuccessDataResult<CreateBootcampStateResponse>(response, BootcampStateMessages.BootcampStateAdded);
         }
 
         public async Task<IResult> DeleteAsync(DeleteBootcampStateRequest request)
@@ -51,7 +52,7 @@ namespace Business.Concretes
             await _rules.CheckIfBootcampStateNotExists(request.Id);
             BootcampState bootcamp = _mapper.Map<BootcampState>(request);
             await _bootcampStateRepository.DeleteAsync(bootcamp);
-            return new SuccessResult("Silme işlemi başarılı");
+            return new SuccessResult(BootcampStateMessages.BootcampStateDeleted);
         }
 
         public async Task<IDataResult<UpdateBootcampStateResponse>> UpdateAsync(UpdateBootcampStateRequest request)
@@ -62,7 +63,7 @@ namespace Business.Concretes
             _mapper.Map(request, bootcampState);
             await _bootcampStateRepository.UpdateAsync(bootcampState);
             UpdateBootcampStateResponse response = _mapper.Map<UpdateBootcampStateResponse>(bootcampState);
-            return new SuccessDataResult<UpdateBootcampStateResponse>(response, "Güncelleme işlemi başarılı");
+            return new SuccessDataResult<UpdateBootcampStateResponse>(response, BootcampStateMessages.BootcampStateUpdated);
         }
     }
 }

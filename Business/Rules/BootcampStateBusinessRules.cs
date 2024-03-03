@@ -2,7 +2,6 @@
 using Core.CrossCuttingConcerns.Rules;
 using Core.Exceptions.Types;
 using DataAccess.Abstracts;
-using DataAccess.Repositories;
 
 namespace Business.Rules
 {
@@ -19,7 +18,7 @@ namespace Business.Rules
         {
             var isExists = await _bootcampStateRepository.GetAsync(a => a.Id == id);
             if (isExists is null)
-                throw new BusinessException("BootcampState does not exists");
+                throw new BusinessException(BootcampStateMessages.BootcampStateIdCheck);
         }
 
         public async Task CheckBootcampStateNameIfExist(string name)

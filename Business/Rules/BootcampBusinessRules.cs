@@ -2,7 +2,6 @@
 using Core.CrossCuttingConcerns.Rules;
 using Core.Exceptions.Types;
 using DataAccess.Abstracts;
-using DataAccess.Repositories;
 
 namespace Business.Rules
 {

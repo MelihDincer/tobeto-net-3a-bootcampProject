@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.Constants;
 using Business.Requests.Instructors;
 using Business.Responses.Instructors;
 using Business.Rules;
@@ -24,7 +25,7 @@ public class InstructorManager : IInstructorService
     {
         List<Instructor> instructors = await _instructorRepository.GetAllAsync();
         List<GetAllInstructorResponse> reponses = _mapper.Map<List<GetAllInstructorResponse>>(instructors);
-        return new SuccessDataResult<List<GetAllInstructorResponse>>(reponses, "Başarıyla listelendi");
+        return new SuccessDataResult<List<GetAllInstructorResponse>>(reponses, InstructorMessages.InstructorsListed);
     }
 
     public async Task<IDataResult<GetByIdInstructorResponse>> GetByIdAsync(int id)
@@ -43,7 +44,7 @@ public class InstructorManager : IInstructorService
         Instructor instructor = _mapper.Map<Instructor>(request);
         await _instructorRepository.AddAsync(instructor);
         CreateInstructorResponse response = _mapper.Map<CreateInstructorResponse>(instructor);
-        return new SuccessDataResult<CreateInstructorResponse>(response, "Başarıyla eklendi");
+        return new SuccessDataResult<CreateInstructorResponse>(response, InstructorMessages.InstructorAdded);
     }
 
     public async Task<IResult> DeleteAsync(DeleteInstructorRequest request)
@@ -51,7 +52,7 @@ public class InstructorManager : IInstructorService
         await _rules.CheckIfInstructorNotExists(request.UserId);
         Instructor instructor = await _instructorRepository.GetAsync(i => i.Id == request.UserId);
         await _instructorRepository.DeleteAsync(instructor);
-        return new SuccessResult("Başarıyla silindi");
+        return new SuccessResult(InstructorMessages.InstructorDeleted);
     }
 
     public async Task<IDataResult<UpdateInstructorResponse>> UpdateAsync(UpdateInstructorRequest request)
@@ -64,6 +65,6 @@ public class InstructorManager : IInstructorService
         _mapper.Map(request, instructor);
         await _instructorRepository.UpdateAsync(instructor);
         UpdateInstructorResponse response = _mapper.Map<UpdateInstructorResponse>(instructor);
-        return new SuccessDataResult<UpdateInstructorResponse>(response, "Başarıyla güncellendi");
+        return new SuccessDataResult<UpdateInstructorResponse>(response, InstructorMessages.InstructorUpdated);
     }
 }

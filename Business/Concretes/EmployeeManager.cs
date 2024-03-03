@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.Constants;
 using Business.Requests.Employees;
 using Business.Responses.Employees;
 using Business.Rules;
@@ -25,7 +26,7 @@ public class EmployeeManager : IEmployeeService
     {
         List<Employee> employees = await _employeeRepository.GetAllAsync();
         List<GetAllEmployeeResponse> responses = _mapper.Map<List<GetAllEmployeeResponse>>(employees);
-        return new SuccessDataResult<List<GetAllEmployeeResponse>>(responses, "Başarıyla listelendi");
+        return new SuccessDataResult<List<GetAllEmployeeResponse>>(responses, EmployeeMessages.EmployeesListed);
     }
 
     public async Task<IDataResult<GetByIdEmployeeResponse>> GetByIdAsync(int id)
@@ -44,7 +45,7 @@ public class EmployeeManager : IEmployeeService
         Employee employee = _mapper.Map<Employee>(request);
         await _employeeRepository.AddAsync(employee);
         CreateEmployeeResponse response = _mapper.Map<CreateEmployeeResponse>(employee);
-        return new SuccessDataResult<CreateEmployeeResponse>(response, "Başarıyla eklendi");
+        return new SuccessDataResult<CreateEmployeeResponse>(response, EmployeeMessages.EmployeeAdded);
     }
 
     public async Task<IResult> DeleteAsync(DeleteEmployeeRequest request)
@@ -52,7 +53,7 @@ public class EmployeeManager : IEmployeeService
         await _rules.CheckIfEmployeeNotExists(request.UserId);
         Employee employee = await _employeeRepository.GetAsync(e => e.Id == request.UserId);
         await _employeeRepository.DeleteAsync(employee);
-        return new SuccessResult("Başarıyla silindi");
+        return new SuccessResult(EmployeeMessages.EmployeeDeleted);
     }
 
     public async Task<IDataResult<UpdateEmployeeResponse>> UpdateAsync(UpdateEmployeeRequest request)
@@ -65,6 +66,6 @@ public class EmployeeManager : IEmployeeService
         _mapper.Map(request, employee);
         await _employeeRepository.UpdateAsync(employee);
         UpdateEmployeeResponse response = _mapper.Map<UpdateEmployeeResponse>(employee);
-        return new SuccessDataResult<UpdateEmployeeResponse>(response, "Başarıyla güncellendi");
+        return new SuccessDataResult<UpdateEmployeeResponse>(response, EmployeeMessages.EmployeeUpdated);
     }
 }
