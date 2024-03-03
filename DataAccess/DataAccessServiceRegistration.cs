@@ -1,7 +1,5 @@
 ﻿using Core.Extensions;
-using DataAccess.Abstracts;
 using DataAccess.Concretes.EntityFramework.Contexts;
-using DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,11 +12,8 @@ public static class DataAccessServiceRegistration
     {
         services.AddDbContext<BaseDbContext>(options => options.UseSqlServer(configuration
             .GetConnectionString("TobetoNet3AConnectionString")));
-
         services.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).
             Where(t => t.ServiceType.Name.EndsWith("Repository"));
-
         return services;
     }
-
 }
