@@ -62,13 +62,13 @@ namespace Business.Concretes
 
         public async Task<IDataResult<UpdateApplicationResponse>> UpdateAsync(UpdateApplicationRequest request)
         {
+            await _rules.CheckIfApplicationNotExists(request.Id);
             await _rules.CheckIfApplicantIsBlackList(request.ApplicantId);
             await _rules.CheckIfApplicantNotExists(request.ApplicantId);
             await _rules.CheckIfBootcampNotExists(request.BootcampId);
             await _rules.CheckIfApplicationStateNotExists(request.ApplicationStateId);
             await _rules.CheckIfApplicantBootcampNotExists(request.ApplicantId, request.BootcampId);
-            await _rules.CheckIfApplicationNotExists(request.Id);
-            Application application = await _applicationRepository.GetAsync(x => x.Id == request.Id);
+            Application application = await _applicationRepository.GetAsync(x => x.Id == request.Id, include: x => x.Include(x => x.Applicant).Include(x => x.Bootcamp).Include(x => x.ApplicationState));
             _mapper.Map(request, application);
             await _applicationRepository.UpdateAsync(application);
             UpdateApplicationResponse response = _mapper.Map<UpdateApplicationResponse>(application);

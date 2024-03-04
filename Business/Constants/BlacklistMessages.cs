@@ -8,5 +8,6 @@ public class BlacklistMessages
     public static string BlacklistFound = "Blacklisted Applicant  Found Successfully";
     public static string BlacklistUpdated = "Blacklist Updated Successfully";
     public static string BlacklistIdCheck = "Blacklist could not be found";
-    public static string BlacklistApplicantIsAlreadyExists = "Applicant is already exists";
+    public static string BlacklistApplicantFound = "Applicant is already exists";
+    public static string BlacklistApplicantNotFound = "Applicant is not exists";
 }

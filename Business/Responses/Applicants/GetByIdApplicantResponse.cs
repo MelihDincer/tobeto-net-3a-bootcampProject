@@ -12,6 +12,6 @@
         public string Password { get; set; }
         public string About { get; set; }
         public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Business.Abstracts;
 using Business.Requests.BlackLists;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -22,10 +21,16 @@ namespace WebAPI.Controllers
             return HandleDataResult(await _blackListService.GetAllAsync());
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetByIdAsync/{id}")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             return HandleDataResult(await _blackListService.GetByIdAsync(id));
+        }
+
+        [HttpGet("GetByApplicantIdAsync/{applicantId}")]
+        public async Task<IActionResult> GetByApplicantIdAsync(int applicantId)
+        {
+            return HandleDataResult(await _blackListService.GetByApplicantIdAsync(applicantId));
         }
 
         [HttpPost]

@@ -26,7 +26,16 @@ namespace Business.Rules
             var isExists = await _blackListRepository.GetAsync(b => b.ApplicantId == applicantId);
             if(isExists is not null)
             {
-                throw new BusinessException(BlacklistMessages.BlacklistApplicantIsAlreadyExists);
+                throw new BusinessException(BlacklistMessages.BlacklistApplicantFound);
+            } 
+        }
+
+        public async Task CheckIfApplicantExists(int applicantId)
+        {
+            var isExists = await _blackListRepository.GetAsync(b => b.ApplicantId == applicantId);
+            if (isExists is null)
+            {
+                throw new BusinessException(BlacklistMessages.BlacklistApplicantNotFound);
             }
         }
     }

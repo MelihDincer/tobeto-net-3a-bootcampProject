@@ -63,7 +63,7 @@ public class BootcampManager : IBootcampService
         await _rules.CheckIfInstructorNotExists(request.InstructorId);
         await _rules.CheckIfBootcampStateNotExists(request.BootcampStateId);
         await _rules.CheckBootcampNameIfExist(request.Name);
-        Bootcamp bootcamp = await _bootcampRepository.GetAsync(x => x.Id == request.Id);
+        Bootcamp bootcamp = await _bootcampRepository.GetAsync(x => x.Id == request.Id, include: x => x.Include(x => x.Instructor).Include(x => x.BootcampState));
         _mapper.Map(request, bootcamp);
         await _bootcampRepository.UpdateAsync(bootcamp);
         UpdateBootcampResponse response = _mapper.Map<UpdateBootcampResponse>(bootcamp);

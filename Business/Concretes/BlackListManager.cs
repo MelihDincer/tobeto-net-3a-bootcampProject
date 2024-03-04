@@ -7,6 +7,7 @@ using Business.Rules;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Concretes
 {
@@ -42,14 +43,15 @@ namespace Business.Concretes
 
         public async Task<IDataResult<List<GetAllBlackListResponse>>> GetAllAsync()
         {
-            List<BlackList> blackLists = await _blackListRepository.GetAllAsync();
+            List<BlackList> blackLists = await _blackListRepository.GetAllAsync(include: x => x.Include(x => x.Applicant));
             List<GetAllBlackListResponse> responses = _mapper.Map<List<GetAllBlackListResponse>>(blackLists);
             return new SuccessDataResult<List<GetAllBlackListResponse>>(responses, BlacklistMessages.BlacklistsListed);
         }
 
         public async Task<IDataResult<GetByApplicantIdBlackListResponse>> GetByApplicantIdAsync(int applicantId)
         {
-            BlackList blackList = await _blackListRepository.GetAsync(x => x.ApplicantId == applicantId);
+            await _rules.CheckIfApplicantExists(applicantId);
+            BlackList blackList = await _blackListRepository.GetAsync(x => x.ApplicantId == applicantId, include: x => x.Include(x => x.Applicant));
             GetByApplicantIdBlackListResponse response = _mapper.Map<GetByApplicantIdBlackListResponse>(blackList);
             return new SuccessDataResult<GetByApplicantIdBlackListResponse>(response);
         }
@@ -57,16 +59,15 @@ namespace Business.Concretes
         public async Task<IDataResult<GetByIdBlackListResponse>> GetByIdAsync(int id)
         {
             await _rules.CheckIfBlackListNotExists(id);
-            BlackList blackList = await _blackListRepository.GetAsync(x => x.Id == id);
+            BlackList blackList = await _blackListRepository.GetAsync(x => x.Id == id, include: x => x.Include(x => x.Applicant));
             GetByIdBlackListResponse response = _mapper.Map<GetByIdBlackListResponse>(blackList);
             return new SuccessDataResult<GetByIdBlackListResponse>(response);
         }
 
         public async Task<IDataResult<UpdateBlackListResponse>> UpdateAsync(UpdateBlackListRequest request)
         {
-            await _rules.CheckIfApplicantNotExists(request.ApplicantId);
             await _rules.CheckIfBlackListNotExists(request.Id);
-            BlackList blackList = await _blackListRepository.GetAsync(x => x.Id == request.Id);
+            BlackList blackList = await _blackListRepository.GetAsync(x => x.Id == request.Id, include: x => x.Include(x => x.Applicant));
             _mapper.Map(request, blackList);
             await _blackListRepository.UpdateAsync(blackList);
             UpdateBlackListResponse response = _mapper.Map<UpdateBlackListResponse>(blackList);

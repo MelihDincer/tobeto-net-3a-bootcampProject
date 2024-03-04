@@ -9,6 +9,4 @@ public class BootcampMessages
     public static string BootcampUpdated = "Bootcamp Updated Successfully";
     public static string BootcampIdCheck = "Bootcamp ID could not be found";
     public static string BootcampNameCheck = "Bootcamp name already exists";
-    public static string BootcampStateCheck = "BootcampState ID could not be found";
-    public static string BootcampInstructorCheck = "Bootcamp Instructor ID could not be found";
 }
