@@ -19,5 +19,24 @@ namespace Entities.Concretes
             Applications = new HashSet<Application>();
             BootcampImages = new HashSet<BootcampImage>();
         }
+
+        public Bootcamp(int id, int instructorId, int bootcampStateId, string name, DateTime startDate, DateTime endDate) : this()
+        {
+            Id = id;
+            InstructorId = instructorId;
+            BootcampStateId = bootcampStateId;
+            Name = name;
+            StartDate = startDate;
+            EndDate = endDate;
+        }
+
+        public Bootcamp(int instructorId, int bootcampStateId, string name, DateTime startDate, DateTime endDate) : this()
+        {
+            InstructorId = instructorId;
+            BootcampStateId = bootcampStateId;
+            Name = name;
+            StartDate = startDate;
+            EndDate = endDate;
+        }
     }
 }

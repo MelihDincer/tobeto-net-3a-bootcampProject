@@ -9,6 +9,7 @@ namespace DataAccess.Concretes.EntityFramework.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<BlackList> builder)
         {
             builder.ToTable("BlackLists").HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasColumnName("Id").IsRequired();
             builder.Property(x => x.Reason).HasColumnName("Reason");
             builder.Property(x => x.Date).HasColumnName("Date").IsRequired();
             builder.Property(x => x.ApplicantId).HasColumnName("ApplicantId").IsRequired();
