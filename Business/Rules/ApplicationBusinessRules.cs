@@ -26,7 +26,7 @@ namespace Business.Rules
 
         public async Task CheckIfApplicantIsBlackList(int applicantId)
         {
-            var applicant = await _blackListService.GetByApplicantIdAsync(applicantId);
+            var applicant = await _blackListService.CheckIfApplicantIdBlackList(applicantId);
             if (applicant.Data is not null)
                 throw new BusinessException(ApplicationMessages.ApplicantBlacklisted);
         }

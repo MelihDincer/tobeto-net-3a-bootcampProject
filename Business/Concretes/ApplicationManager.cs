@@ -4,6 +4,8 @@ using Business.Constants;
 using Business.Requests.Applications;
 using Business.Responses.Applications;
 using Business.Rules;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
@@ -39,6 +41,7 @@ namespace Business.Concretes
             return new SuccessDataResult<GetByIdApplicationResponse>(response);
         }
 
+        [LogAspect(typeof(MssqlLogger))]
         public async Task<IDataResult<CreateApplicationResponse>> AddAsync(CreateApplicationRequest request)
         {
             await _rules.CheckIfApplicantIsBlackList(request.ApplicantId);

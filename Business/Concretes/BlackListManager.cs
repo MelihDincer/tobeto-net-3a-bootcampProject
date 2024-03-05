@@ -24,6 +24,13 @@ namespace Business.Concretes
             _rules = rules;
         }
 
+        public async Task<IDataResult<GetByApplicantIdBlackListResponse>> CheckIfApplicantIdBlackList(int applicantId)
+        {
+            BlackList blackList = await _blackListRepository.GetAsync(x => x.ApplicantId == applicantId);
+            GetByApplicantIdBlackListResponse response = _mapper.Map<GetByApplicantIdBlackListResponse>(blackList);
+            return new SuccessDataResult<GetByApplicantIdBlackListResponse>(response);
+        }
+
         public async Task<IDataResult<CreateBlackListResponse>> CreateAsync(CreateBlackListRequest request)
         {
             await _rules.CheckIfApplicantNotExists(request.ApplicantId);
