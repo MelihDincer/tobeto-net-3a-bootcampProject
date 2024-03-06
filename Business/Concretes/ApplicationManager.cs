@@ -26,6 +26,7 @@ namespace Business.Concretes
             _rules = rules;
         }
 
+        [LogAspect(typeof(MongoDbLogger))]
         public async Task<IDataResult<List<GetAllApplicationResponse>>> GetAllAsync()
         {
             List<Application> applications = await _applicationRepository.GetAllAsync(include: x => x.Include(x => x.Applicant).Include(x => x.Bootcamp).Include(x => x.ApplicationState));
@@ -41,7 +42,7 @@ namespace Business.Concretes
             return new SuccessDataResult<GetByIdApplicationResponse>(response);
         }
 
-        [LogAspect(typeof(MssqlLogger))]
+        [LogAspect(typeof(MongoDbLogger))]
         public async Task<IDataResult<CreateApplicationResponse>> AddAsync(CreateApplicationRequest request)
         {
             await _rules.CheckIfApplicantIsBlackList(request.ApplicantId);
