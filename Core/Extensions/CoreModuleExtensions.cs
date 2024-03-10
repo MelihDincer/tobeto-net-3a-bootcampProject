@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Extensions;
 
-public static class CoreModuleExtension
+public static class CoreModuleExtensions
 {
     public static IServiceCollection AddCoreModule(this IServiceCollection services)
     {

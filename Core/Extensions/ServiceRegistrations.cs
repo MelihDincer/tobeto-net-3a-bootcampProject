@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Core.Extensions
 {
-    public static class ServiceRegistration
+    public static class ServiceRegistrations
     {
         public static IServiceCollection AddSubClassesOfType(this IServiceCollection services, Assembly assembly,
             Type type, Func<IServiceCollection, Type, IServiceCollection>? addWithLifeCycle = null)
