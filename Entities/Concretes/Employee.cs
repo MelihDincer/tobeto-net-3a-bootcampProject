@@ -1,4 +1,6 @@
-﻿namespace Entities.Concretes
+﻿using Core.Utilities.Security.Entities;
+
+namespace Entities.Concretes
 {
     public class Employee : User
     {
@@ -6,11 +8,11 @@
 
         public Employee()
         {
-            
+
         }
 
         public Employee(int id, string userName, string firstName, string lastName, DateTime dateOfBirth, string nationalIdentity,
-            string email, string password, string position) : this()
+            string email, string position, byte[] passwordHash, byte[] passwordSalt) : this()
         {
             Id = id;
             UserName = userName;
@@ -19,12 +21,13 @@
             DateOfBirth = dateOfBirth;
             NationalIdentity = nationalIdentity;
             Email = email;
-            Password = password;
             Position = position;
+            PasswordHash = passwordHash;
+            PasswordSalt = passwordSalt;
         }
 
         public Employee(string userName, string firstName, string lastName, DateTime dateOfBirth, string nationalIdentity,
-            string email, string password, string position) : this()
+            string email, string position, byte[] passwordHash, byte[] passwordSalt) : this()
         {
             UserName = userName;
             FirstName = firstName;
@@ -32,8 +35,9 @@
             DateOfBirth = dateOfBirth;
             NationalIdentity = nationalIdentity;
             Email = email;
-            Password = password;
             Position = position;
+            PasswordHash = passwordHash;
+            PasswordSalt = passwordSalt;
         }
     }
 }
