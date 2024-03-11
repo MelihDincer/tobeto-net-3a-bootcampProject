@@ -1,4 +1,5 @@
-﻿using Entities.Concretes;
+﻿using Core.Utilities.Security.Entities;
+using Entities.Concretes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
@@ -8,7 +9,6 @@ namespace DataAccess.Concretes.EntityFramework.Contexts
     public class BaseDbContext : DbContext
     {
         protected IConfiguration Configuration { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<Applicant> Applicants { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Instructor> Instructors { get; set; }
@@ -18,6 +18,9 @@ namespace DataAccess.Concretes.EntityFramework.Contexts
         public DbSet<ApplicationState> ApplicationStates { get; set; }
         public DbSet<BootcampImage> BootcampImages { get; set; }
         public DbSet<BlackList> BlackLists { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<OperationClaim> OperationClaims { get; set; }
+        public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
 
         public BaseDbContext(DbContextOptions dbContextOptions, IConfiguration configuration) : base(dbContextOptions)
         {

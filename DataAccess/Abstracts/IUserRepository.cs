@@ -1,5 +1,5 @@
 ﻿using Core.DataAccess;
-using Entities.Concretes;
+using Core.Utilities.Security.Entities;
 
 namespace DataAccess.Abstracts
 {

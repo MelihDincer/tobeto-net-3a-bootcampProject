@@ -1,15 +1,13 @@
 ﻿using AutoMapper;
 using Business.Responses.Users;
-using Entities.Concretes;
+using Core.Utilities.Security.Entities;
 
-namespace Business.Profiles.Users
+namespace Business.Profiles.Users;
+public class MappingProfiles : Profile
 {
-    public class MappingProfiles : Profile
+    public MappingProfiles()
     {
-        public MappingProfiles()
-        {
-            CreateMap<User, GetAllUserResponse>().ReverseMap();
-            CreateMap<User, GetByIdUserResponse>().ReverseMap();
-        }
+        CreateMap<User, GetAllUserResponse>().ReverseMap();
+        CreateMap<User, GetByIdUserResponse>().ReverseMap();
     }
 }

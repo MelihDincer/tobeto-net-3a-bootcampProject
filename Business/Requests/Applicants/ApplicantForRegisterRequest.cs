@@ -1,6 +1,5 @@
-﻿namespace Core.Utilities.Security.Dtos;
-
-public class UserForRegisterDto
+﻿namespace Business.Requests.Applicants;
+public class ApplicantForRegisterRequest
 {
     public string UserName { get; set; }
     public string Email { get; set; }
@@ -9,4 +8,5 @@ public class UserForRegisterDto
     public string LastName { get; set; }
     public DateTime DateOfBirth { get; set; }
     public string NationalIdentity { get; set; }
+    public string About { get; set; }
 }
