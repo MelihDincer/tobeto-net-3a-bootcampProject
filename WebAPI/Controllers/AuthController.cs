@@ -22,21 +22,21 @@ public class AuthController : BaseController
     public async Task<IActionResult> EmployeeRegister(EmployeeForRegisterRequest employeeForRegisterRequest)
     {
         var result = await _authService.EmployeeRegister(employeeForRegisterRequest);
-        return HandleDataResult(result);
+        return HandleResult(result);
     }
 
     [HttpPost("Register/Instructor")]
     public async Task<IActionResult> InstructorRegister(InstructorForRegisterRequest instructorForRegisterRequest)
     {
         var result = await _authService.InstructorRegister(instructorForRegisterRequest);
-        return HandleDataResult(result);
+        return HandleResult(result);
     }
 
     [HttpPost("Register/Applicant")]
     public async Task<IActionResult> ApplicantRegister(ApplicantForRegisterRequest applicantForRegisterRequest)
     {
         var result = await _authService.ApplicantRegister(applicantForRegisterRequest);
-        return HandleDataResult(result);
+        return HandleResult(result);
     }
 
     [HttpPost("Login")]

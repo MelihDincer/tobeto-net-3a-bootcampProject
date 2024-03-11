@@ -5,6 +5,7 @@ using Business.Requests.Applicants;
 using Business.Responses.Applicants;
 using Business.Rules;
 using Core.Utilities.Results;
+using Core.Utilities.Security.Hashing;
 using DataAccess.Abstracts;
 using Entities.Concretes;
 
@@ -38,7 +39,7 @@ public class ApplicantManager : IApplicantService
 
     public async Task<IDataResult<CreateApplicantResponse>> AddAsync(CreateApplicantRequest request)
     {
-        await _rules.CheckUserNameIfExist(request.UserName);
+        await _rules.CheckUserNameIfExist(request.UserName, null);
         await _rules.CheckEmailExist(request.Email);
         await _rules.CheckNationalIdentityIfExist(request.NationalIdentity);
         Applicant applicant = _mapper.Map<Applicant>(request);
@@ -49,20 +50,27 @@ public class ApplicantManager : IApplicantService
 
     public async Task<IResult> DeleteAsync(DeleteApplicantRequest request)
     {
-        await _rules.CheckIfApplicantNotExists(request.UserId);
-        Applicant applicant = await _applicantRepository.GetAsync(a => a.Id == request.UserId);
+        await _rules.CheckIfApplicantNotExists(request.Id);
+        Applicant applicant = await _applicantRepository.GetAsync(a => a.Id == request.Id);
         await _applicantRepository.DeleteAsync(applicant);
         return new SuccessResult(ApplicantMessages.ApplicantDeleted);
     }
 
     public async Task<IDataResult<UpdateApplicantResponse>> UpdateAsync(UpdateApplicantRequest request)
     {
-        await _rules.CheckIfApplicantNotExists(request.UserId);
-        await _rules.CheckUserNameIfExist(request.UserName);
+        await _rules.CheckIfApplicantNotExists(request.Id);
+        await _rules.CheckUserNameIfExist(request.UserName, request.Id);
         await _rules.CheckEmailExist(request.Email);
         await _rules.CheckNationalIdentityIfExist(request.NationalIdentity);
-        Applicant applicant = await _applicantRepository.GetAsync(x => x.Id == request.UserId);
+        byte[] passwordHash, passwordSalt;
+        HashingHelper.CreatePasswordHash(request.Password, out passwordHash, out passwordSalt);
+
+        Applicant applicant = await _applicantRepository.GetAsync(x => x.Id == request.Id);
+
         _mapper.Map(request, applicant);
+        applicant.PasswordHash = passwordHash;
+        applicant.PasswordSalt = passwordSalt;
+
         await _applicantRepository.UpdateAsync(applicant);
         UpdateApplicantResponse response = _mapper.Map<UpdateApplicantResponse>(applicant);
         return new SuccessDataResult<UpdateApplicantResponse>(response, ApplicantMessages.ApplicantUpdated);

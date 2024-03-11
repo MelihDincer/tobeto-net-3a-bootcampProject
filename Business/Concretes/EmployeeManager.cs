@@ -5,6 +5,7 @@ using Business.Requests.Employees;
 using Business.Responses.Employees;
 using Business.Rules;
 using Core.Utilities.Results;
+using Core.Utilities.Security.Hashing;
 using DataAccess.Abstracts;
 using Entities.Concretes;
 
@@ -50,20 +51,24 @@ public class EmployeeManager : IEmployeeService
 
     public async Task<IResult> DeleteAsync(DeleteEmployeeRequest request)
     {
-        await _rules.CheckIfEmployeeNotExists(request.UserId);
-        Employee employee = await _employeeRepository.GetAsync(e => e.Id == request.UserId);
+        await _rules.CheckIfEmployeeNotExists(request.Id);
+        Employee employee = await _employeeRepository.GetAsync(e => e.Id == request.Id);
         await _employeeRepository.DeleteAsync(employee);
         return new SuccessResult(EmployeeMessages.EmployeeDeleted);
     }
 
     public async Task<IDataResult<UpdateEmployeeResponse>> UpdateAsync(UpdateEmployeeRequest request)
     {
-        await _rules.CheckIfEmployeeNotExists(request.UserId);
-        await _rules.CheckUserNameIfExist(request.UserName);
-        await _rules.CheckEmailExist(request.Email);
-        await _rules.CheckNationalIdentityIfExist(request.NationalIdentity);
-        Employee employee = await _employeeRepository.GetAsync(x => x.Id == request.UserId);
+        //await _rules.CheckIfEmployeeNotExists(request.Id);
+        //await _rules.CheckUserNameIfExist(request.UserName);
+        //await _rules.CheckEmailExist(request.Email);
+        //await _rules.CheckNationalIdentityIfExist(request.NationalIdentity);
+        byte[] passwordHash, passwordSalt;
+        HashingHelper.CreatePasswordHash(request.Password, out passwordHash, out passwordSalt);
+        Employee employee = await _employeeRepository.GetAsync(x => x.Id == request.Id);
         _mapper.Map(request, employee);
+        employee.PasswordHash = passwordHash;
+        employee.PasswordSalt = passwordSalt;
         await _employeeRepository.UpdateAsync(employee);
         UpdateEmployeeResponse response = _mapper.Map<UpdateEmployeeResponse>(employee);
         return new SuccessDataResult<UpdateEmployeeResponse>(response, EmployeeMessages.EmployeeUpdated);

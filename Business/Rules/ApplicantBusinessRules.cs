@@ -20,9 +20,9 @@ public class ApplicantBusinessRules : BaseBusinessRules
             throw new BusinessException(ApplicantMessages.ApplicantIdCheck);
     }
 
-    public async Task CheckUserNameIfExist(string userName)
+    public async Task CheckUserNameIfExist(string userName, int? userId)
     {
-        var isExists = await _applicantRepository.GetAsync(a => a.UserName == userName);
+        var isExists = await _applicantRepository.GetAsync(a => a.UserName == userName && a.Id != userId);
         if (isExists is not null)
             throw new BusinessException(ApplicantMessages.UserNameCheck);
     }

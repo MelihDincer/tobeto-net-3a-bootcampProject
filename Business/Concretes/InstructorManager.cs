@@ -5,6 +5,7 @@ using Business.Requests.Instructors;
 using Business.Responses.Instructors;
 using Business.Rules;
 using Core.Utilities.Results;
+using Core.Utilities.Security.Hashing;
 using DataAccess.Abstracts;
 using Entities.Concretes;
 
@@ -49,20 +50,24 @@ public class InstructorManager : IInstructorService
 
     public async Task<IResult> DeleteAsync(DeleteInstructorRequest request)
     {
-        await _rules.CheckIfInstructorNotExists(request.UserId);
-        Instructor instructor = await _instructorRepository.GetAsync(i => i.Id == request.UserId);
+        await _rules.CheckIfInstructorNotExists(request.Id);
+        Instructor instructor = await _instructorRepository.GetAsync(i => i.Id == request.Id);
         await _instructorRepository.DeleteAsync(instructor);
         return new SuccessResult(InstructorMessages.InstructorDeleted);
     }
 
     public async Task<IDataResult<UpdateInstructorResponse>> UpdateAsync(UpdateInstructorRequest request)
     {
-        await _rules.CheckIfInstructorNotExists(request.UserId);
+        await _rules.CheckIfInstructorNotExists(request.Id);
         await _rules.CheckUserNameIfExist(request.UserName);
         await _rules.CheckEmailExist(request.Email);
         await _rules.CheckNationalIdentityIfExist(request.NationalIdentity);
-        Instructor instructor = await _instructorRepository.GetAsync(x => x.Id == request.UserId);
+        byte[] passwordHash, passwordSalt;
+        HashingHelper.CreatePasswordHash(request.Password, out passwordHash, out passwordSalt);
+        Instructor instructor = await _instructorRepository.GetAsync(x => x.Id == request.Id);
         _mapper.Map(request, instructor);
+        instructor.PasswordHash = passwordHash;
+        instructor.PasswordSalt = passwordSalt;
         await _instructorRepository.UpdateAsync(instructor);
         UpdateInstructorResponse response = _mapper.Map<UpdateInstructorResponse>(instructor);
         return new SuccessDataResult<UpdateInstructorResponse>(response, InstructorMessages.InstructorUpdated);

@@ -46,42 +46,7 @@ public class AuthManager : IAuthService
         var accessToken = _tokenHelper.CreateToken(user, claims);
         return new SuccessDataResult<AccessToken>(accessToken, AuthMessages.TokenIsCreated);
     }
-    public async Task<DataResult<AccessToken>> CreateAccessToken(Employee employee)
-    {
-        List<OperationClaim> claims = await _userOperationClaimRepository.Query()
-            .AsNoTracking().Where(x => x.UserId == employee.Id).Select(x => new OperationClaim
-            {
-                Id = x.OperationClaimId,
-                Name = x.OperationClaim.Name
-            }).ToListAsync();
-        var accessToken = _tokenHelper.CreateToken(employee, claims);
-        return new SuccessDataResult<AccessToken>(accessToken, AuthMessages.TokenIsCreated);
 
-    }
-    public async Task<DataResult<AccessToken>> CreateAccessToken(Instructor instructor)
-    {
-        List<OperationClaim> claims = await _userOperationClaimRepository.Query()
-            .AsNoTracking().Where(x => x.UserId == instructor.Id).Select(x => new OperationClaim
-            {
-                Id = x.OperationClaimId,
-                Name = x.OperationClaim.Name
-            }).ToListAsync();
-        var accessToken = _tokenHelper.CreateToken(instructor, claims);
-        return new SuccessDataResult<AccessToken>(accessToken, AuthMessages.TokenIsCreated);
-
-    }
-    public async Task<DataResult<AccessToken>> CreateAccessToken(Applicant applicant)
-    {
-        List<OperationClaim> claims = await _userOperationClaimRepository.Query()
-            .AsNoTracking().Where(x => x.UserId == applicant.Id).Select(x => new OperationClaim
-            {
-                Id = x.OperationClaimId,
-                Name = x.OperationClaim.Name
-            }).ToListAsync();
-        var accessToken = _tokenHelper.CreateToken(applicant, claims);
-        return new SuccessDataResult<AccessToken>(accessToken, AuthMessages.TokenIsCreated);
-
-    }
     public async Task<DataResult<AccessToken>> Login(UserForLoginDto userForLoginRequest)
     {
         var user = await _userService.GetByMail(userForLoginRequest.Email);
@@ -92,9 +57,9 @@ public class AuthManager : IAuthService
         return new SuccessDataResult<AccessToken>(createAccessToken.Data, AuthMessages.LoginMessage);
     }
 
-    public async Task<DataResult<AccessToken>> EmployeeRegister(EmployeeForRegisterRequest employeeForRegisterRequest)
+    public async Task<Result> EmployeeRegister(EmployeeForRegisterRequest employeeForRegisterRequest)
     {
-        //await _rules.UserEmailShouldBeNotExists(employeeForRegisterRequest.Email);
+        await _rules.UserEmailShouldBeNotExists(employeeForRegisterRequest.Email);
         byte[] passwordHash, passwordSalt;
         HashingHelper.CreatePasswordHash(employeeForRegisterRequest.Password, out passwordHash, out passwordSalt);
         var employee = new Employee
@@ -109,14 +74,13 @@ public class AuthManager : IAuthService
             PasswordSalt = passwordSalt,
             Position = employeeForRegisterRequest.Position,
         };
-        await _employeeRepository.AddAsync(employee);
-        var createAccessToken = await CreateAccessToken(employee);
-        return new SuccessDataResult<AccessToken>(createAccessToken.Data, AuthMessages.RegisterMessage);
+        await _employeeRepository.AddAsync(employee);      
+        return new SuccessResult(AuthMessages.RegisterMessage);
     }
 
-    public async Task<DataResult<AccessToken>> InstructorRegister(InstructorForRegisterRequest instructorForRegisterRequest)
+    public async Task<Result> InstructorRegister(InstructorForRegisterRequest instructorForRegisterRequest)
     {
-        //await _rules.UserEmailShouldBeNotExists(instructorForRegisterRequest.Email);
+        await _rules.UserEmailShouldBeNotExists(instructorForRegisterRequest.Email);
         byte[] passwordHash, passwordSalt;
         HashingHelper.CreatePasswordHash(instructorForRegisterRequest.Password, out passwordHash, out passwordSalt);
         var instructor = new Instructor
@@ -132,13 +96,12 @@ public class AuthManager : IAuthService
             CompanyName = instructorForRegisterRequest.CompanyName,
         };
         await _instructorRepository.AddAsync(instructor);
-        var createAccessToken = await CreateAccessToken(instructor);
-        return new SuccessDataResult<AccessToken>(createAccessToken.Data, AuthMessages.RegisterMessage);
+        return new SuccessResult(AuthMessages.RegisterMessage);
     }
 
-    public async Task<DataResult<AccessToken>> ApplicantRegister(ApplicantForRegisterRequest applicantForRegisterRequest)
+    public async Task<Result> ApplicantRegister(ApplicantForRegisterRequest applicantForRegisterRequest)
     {
-        //await _rules.UserEmailShouldBeNotExists(applicantForRegisterRequest.Email);
+        await _rules.UserEmailShouldBeNotExists(applicantForRegisterRequest.Email);
         byte[] passwordHash, passwordSalt;
         HashingHelper.CreatePasswordHash(applicantForRegisterRequest.Password, out passwordHash, out passwordSalt);
         var applicant = new Applicant
@@ -154,7 +117,6 @@ public class AuthManager : IAuthService
             About = applicantForRegisterRequest.About,
         };
         await _applicantRepository.AddAsync(applicant);
-        var createAccessToken = await CreateAccessToken(applicant);
-        return new SuccessDataResult<AccessToken>(createAccessToken.Data, AuthMessages.RegisterMessage);
+        return new SuccessResult(AuthMessages.RegisterMessage);
     }
 }
