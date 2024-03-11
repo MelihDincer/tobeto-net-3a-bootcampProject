@@ -44,7 +44,42 @@ public class AuthManager : IAuthService
         var accessToken = _tokenHelper.CreateToken(user, claims);
         return new SuccessDataResult<AccessToken>(accessToken, "Created Token");
     }
+    public async Task<DataResult<AccessToken>> CreateAccessToken(Employee employee)
+    {
+        List<OperationClaim> claims = await _userOperationClaimRepository.Query()
+            .AsNoTracking().Where(x => x.UserId == employee.Id).Select(x => new OperationClaim
+            {
+                Id = x.OperationClaimId,
+                Name = x.OperationClaim.Name
+            }).ToListAsync();
+        var accessToken = _tokenHelper.CreateToken(employee, claims);
+        return new SuccessDataResult<AccessToken>(accessToken, "Created Token");
 
+    }
+    public async Task<DataResult<AccessToken>> CreateAccessToken(Instructor instructor)
+    {
+        List<OperationClaim> claims = await _userOperationClaimRepository.Query()
+            .AsNoTracking().Where(x => x.UserId == instructor.Id).Select(x => new OperationClaim
+            {
+                Id = x.OperationClaimId,
+                Name = x.OperationClaim.Name
+            }).ToListAsync();
+        var accessToken = _tokenHelper.CreateToken(instructor, claims);
+        return new SuccessDataResult<AccessToken>(accessToken, "Created Token");
+
+    }
+    public async Task<DataResult<AccessToken>> CreateAccessToken(Applicant applicant)
+    {
+        List<OperationClaim> claims = await _userOperationClaimRepository.Query()
+            .AsNoTracking().Where(x => x.UserId == applicant.Id).Select(x => new OperationClaim
+            {
+                Id = x.OperationClaimId,
+                Name = x.OperationClaim.Name
+            }).ToListAsync();
+        var accessToken = _tokenHelper.CreateToken(applicant, claims);
+        return new SuccessDataResult<AccessToken>(accessToken, "Created Token");
+
+    }
     public async Task<DataResult<AccessToken>> Login(UserForLoginDto userForLoginRequest)
     {
         var user = await _userService.GetByMail(userForLoginRequest.Email);
