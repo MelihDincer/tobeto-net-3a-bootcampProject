@@ -1,5 +1,4 @@
 ﻿using Business.Abstracts;
-using Business.Rules;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Entities;
 using Core.Utilities.Security.Hashing;
@@ -11,9 +10,10 @@ using Core.Utilities.Security.Dtos;
 using Business.Requests.Applicants;
 using Business.Requests.Instructors;
 using Business.Requests.Employees;
+using Business.Rules;
+using Business.Constants;
 
 namespace Business.Concretes;
-
 public class AuthManager : IAuthService
 {
     private readonly IUserService _userService;
@@ -22,8 +22,9 @@ public class AuthManager : IAuthService
     private readonly IEmployeeRepository _employeeRepository;
     private readonly IInstructorRepository _instructorRepository;
     private readonly IApplicantRepository _applicantRepository;
+    private readonly AuthBusinessRules _rules;
 
-    public AuthManager(IUserService userService, ITokenHelper tokenHelper, IUserOperationClaimRepository userOperationClaimRepository, IEmployeeRepository employeeRepository, IInstructorRepository instructorRepository, IApplicantRepository applicantRepository)
+    public AuthManager(IUserService userService, ITokenHelper tokenHelper, IUserOperationClaimRepository userOperationClaimRepository, IEmployeeRepository employeeRepository, IInstructorRepository instructorRepository, IApplicantRepository applicantRepository, AuthBusinessRules rules)
     {
         _userService = userService;
         _tokenHelper = tokenHelper;
@@ -31,6 +32,7 @@ public class AuthManager : IAuthService
         _applicantRepository = applicantRepository;
         _employeeRepository = employeeRepository;
         _instructorRepository = instructorRepository;
+        _rules = rules;
     }
 
     public async Task<DataResult<AccessToken>> CreateAccessToken(User user)
@@ -42,7 +44,7 @@ public class AuthManager : IAuthService
                 Name = x.OperationClaim.Name
             }).ToListAsync();
         var accessToken = _tokenHelper.CreateToken(user, claims);
-        return new SuccessDataResult<AccessToken>(accessToken, "Created Token");
+        return new SuccessDataResult<AccessToken>(accessToken, AuthMessages.TokenIsCreated);
     }
     public async Task<DataResult<AccessToken>> CreateAccessToken(Employee employee)
     {
@@ -53,7 +55,7 @@ public class AuthManager : IAuthService
                 Name = x.OperationClaim.Name
             }).ToListAsync();
         var accessToken = _tokenHelper.CreateToken(employee, claims);
-        return new SuccessDataResult<AccessToken>(accessToken, "Created Token");
+        return new SuccessDataResult<AccessToken>(accessToken, AuthMessages.TokenIsCreated);
 
     }
     public async Task<DataResult<AccessToken>> CreateAccessToken(Instructor instructor)
@@ -65,7 +67,7 @@ public class AuthManager : IAuthService
                 Name = x.OperationClaim.Name
             }).ToListAsync();
         var accessToken = _tokenHelper.CreateToken(instructor, claims);
-        return new SuccessDataResult<AccessToken>(accessToken, "Created Token");
+        return new SuccessDataResult<AccessToken>(accessToken, AuthMessages.TokenIsCreated);
 
     }
     public async Task<DataResult<AccessToken>> CreateAccessToken(Applicant applicant)
@@ -77,17 +79,17 @@ public class AuthManager : IAuthService
                 Name = x.OperationClaim.Name
             }).ToListAsync();
         var accessToken = _tokenHelper.CreateToken(applicant, claims);
-        return new SuccessDataResult<AccessToken>(accessToken, "Created Token");
+        return new SuccessDataResult<AccessToken>(accessToken, AuthMessages.TokenIsCreated);
 
     }
     public async Task<DataResult<AccessToken>> Login(UserForLoginDto userForLoginRequest)
     {
         var user = await _userService.GetByMail(userForLoginRequest.Email);
-        //await _rules.UserShouldBeExists(user.Data);
-        //await _rules.UserEmailShouldBeExists(userForLoginRequest.Email);
-        //await _rules.UserPasswordShouldBeMatch(user.Data.Id, userForLoginRequest.Password);
+        await _rules.UserShouldBeExists(user.Data);
+        await _rules.UserEmailShouldBeExists(userForLoginRequest.Email);
+        await _rules.UserPasswordShouldBeMatch(user.Data.Id, userForLoginRequest.Password);
         var createAccessToken = await CreateAccessToken(user.Data);
-        return new SuccessDataResult<AccessToken>(createAccessToken.Data, "Login Success");
+        return new SuccessDataResult<AccessToken>(createAccessToken.Data, AuthMessages.LoginMessage);
     }
 
     public async Task<DataResult<AccessToken>> EmployeeRegister(EmployeeForRegisterRequest employeeForRegisterRequest)
@@ -109,7 +111,7 @@ public class AuthManager : IAuthService
         };
         await _employeeRepository.AddAsync(employee);
         var createAccessToken = await CreateAccessToken(employee);
-        return new SuccessDataResult<AccessToken>(createAccessToken.Data, "Register Success");
+        return new SuccessDataResult<AccessToken>(createAccessToken.Data, AuthMessages.RegisterMessage);
     }
 
     public async Task<DataResult<AccessToken>> InstructorRegister(InstructorForRegisterRequest instructorForRegisterRequest)
@@ -131,7 +133,7 @@ public class AuthManager : IAuthService
         };
         await _instructorRepository.AddAsync(instructor);
         var createAccessToken = await CreateAccessToken(instructor);
-        return new SuccessDataResult<AccessToken>(createAccessToken.Data, "Register Success");
+        return new SuccessDataResult<AccessToken>(createAccessToken.Data, AuthMessages.RegisterMessage);
     }
 
     public async Task<DataResult<AccessToken>> ApplicantRegister(ApplicantForRegisterRequest applicantForRegisterRequest)
@@ -153,6 +155,6 @@ public class AuthManager : IAuthService
         };
         await _applicantRepository.AddAsync(applicant);
         var createAccessToken = await CreateAccessToken(applicant);
-        return new SuccessDataResult<AccessToken>(createAccessToken.Data, "Register Success");
+        return new SuccessDataResult<AccessToken>(createAccessToken.Data, AuthMessages.RegisterMessage);
     }
 }
