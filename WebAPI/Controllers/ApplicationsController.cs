@@ -1,5 +1,6 @@
 ﻿using Business.Abstracts;
 using Business.Requests.Applications;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace WebAPI.Controllers
 {
@@ -16,6 +17,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "application.list")]
         public async Task<IActionResult> GetAllAsync()
         {
             return HandleDataResult(await _applicationService.GetAllAsync());
